@@ -416,3 +416,31 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+## .NET ##
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.aps
+**/*.pdb
+**/*.userosscache
+**/*.sln.docstates
+
+## Entity Framework ##
+**/Migrations/
+
+## Local database ##
+app.db
+*.mdf
+*.ldf
+
+## Visual Studio ##
+.vs/
+*.swp
+*.[Cc]ache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
