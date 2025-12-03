@@ -43,5 +43,5 @@ public class AircraftModel
     /// <summary>
     /// Collection of flights operated by this aircraft model.
     /// </summary>
-    public List<Flight> Flights { get; set; } = new();
+    public List<Flight> Flights { get; set; } = [];
 }

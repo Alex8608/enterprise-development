@@ -1,8 +1,4 @@
 <Solution>
-  <Project Path="../enterprise-development.AppHost/enterprise-development.AppHost.csproj" />
-  <Project Path="../enterprise-development.ServiceDefaults/enterprise-development.ServiceDefaults.csproj" />
-  <Project Path="AirlineCompany.API/AirlineCompany.API.csproj" />
   <Project Path="AirlineCompany.Core/AirlineCompany.Core.csproj" />
-  <Project Path="AirlineCompany.Infrastructure/AirlineCompany.Infrastructure.csproj" />
   <Project Path="AirlineCompany.Tests/AirlineCompany.Tests.csproj" />
 </Solution>

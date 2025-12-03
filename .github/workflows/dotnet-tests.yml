@@ -1,0 +1,35 @@
+name: CI — build & tests
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: 
+      - main
+  push:
+    branches:
+      - main
+      - lab1
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: dotnet restore
+        run: dotnet restore enterprise-development.sln
+
+      - name: Build solution
+        run: dotnet build enterprise-development.sln --no-restore --configuration Release
+
+      - name: Run tests
+        run: dotnet test AirlineCompany.Tests/AirlineCompany.Tests.csproj --no-build --verbosity normal --configuration Release

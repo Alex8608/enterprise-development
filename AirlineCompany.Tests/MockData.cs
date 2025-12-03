@@ -4,18 +4,18 @@ namespace AirlineCompany.Tests;
 
 /// <summary>
 /// Provides mock data for unit testing airline company domain logic.
-/// Contains sample data for all entities.
+/// Contains sample data for all entities with proper relationships.
 /// </summary>
 public static class MockData
 {
     /// <summary>
-    /// Generates a collection of aircraft families with major manufacturers.
+    /// Gets the collection of aircraft families.
     /// </summary>
-    /// <returns>List of 10 aircraft families from Airbus, Boeing, Bombardier, and Embraer.</returns>
+    /// <returns>List of 10 aircraft families from major manufacturers.</returns>
     public static List<AircraftFamily> GetAircraftFamilies()
     {
-        return new List<AircraftFamily>
-        {
+        return
+        [
             new() { Id = 1, Name = "A320", Manufacturer = "Airbus" },
             new() { Id = 2, Name = "737", Manufacturer = "Boeing" },
             new() { Id = 3, Name = "A330", Manufacturer = "Airbus" },
@@ -26,18 +26,17 @@ public static class MockData
             new() { Id = 8, Name = "E-Jet", Manufacturer = "Embraer" },
             new() { Id = 9, Name = "A220", Manufacturer = "Airbus" },
             new() { Id = 10, Name = "747", Manufacturer = "Boeing" }
-        };
+        ];
     }
 
     /// <summary>
-    /// Generates aircraft models with technical specifications linked to families.
-    /// Includes range, capacity, and cargo information for testing.
+    /// Gets the collection of aircraft models with technical specifications.
     /// </summary>
     /// <returns>List of 10 aircraft models with complete technical data.</returns>
     public static List<AircraftModel> GetAircraftModels()
     {
-        return new List<AircraftModel>
-        {
+        return
+        [
             new() { Id = 1, Name = "A320-200", Range = 6100, PassengerCapacity = 180, CargoCapacity = 4.5, AircraftFamilyId = 1 },
             new() { Id = 2, Name = "A321neo", Range = 7400, PassengerCapacity = 240, CargoCapacity = 5.2, AircraftFamilyId = 1 },
             new() { Id = 3, Name = "737-800", Range = 5765, PassengerCapacity = 189, CargoCapacity = 4.8, AircraftFamilyId = 2 },
@@ -48,107 +47,131 @@ public static class MockData
             new() { Id = 8, Name = "787-9", Range = 14140, PassengerCapacity = 420, CargoCapacity = 13.5, AircraftFamilyId = 6 },
             new() { Id = 9, Name = "CRJ-900", Range = 2870, PassengerCapacity = 90, CargoCapacity = 2.5, AircraftFamilyId = 7 },
             new() { Id = 10, Name = "E195-E2", Range = 4815, PassengerCapacity = 146, CargoCapacity = 3.8, AircraftFamilyId = 8 }
-        };
+        ];
     }
 
     /// <summary>
-    /// Generates flight schedule with international routes and varying durations.
-    /// Includes both past and future flights for comprehensive testing.
+    /// Gets the collection of flights with international routes.
     /// </summary>
     /// <returns>List of 10 flights covering major international routes.</returns>
     public static List<Flight> GetFlights()
     {
-        return new List<Flight>
-        {
-            new() { Id = 1, Code = "SU100", DepartureCity = "Moscow", ArrivalCity = "London", DepartureDate = DateTime.Now.AddDays(-5), ArrivalDate = DateTime.Now.AddDays(-5).AddHours(4), Duration = TimeSpan.FromHours(4), AircraftModelId = 1 },
-            new() { Id = 2, Code = "SU200", DepartureCity = "Moscow", ArrivalCity = "Paris", DepartureDate = DateTime.Now.AddDays(-3), ArrivalDate = DateTime.Now.AddDays(-3).AddHours(3.5), Duration = TimeSpan.FromHours(3.5), AircraftModelId = 2 },
-            new() { Id = 3, Code = "SU300", DepartureCity = "London", ArrivalCity = "New York", DepartureDate = DateTime.Now.AddDays(-2), ArrivalDate = DateTime.Now.AddDays(-2).AddHours(8), Duration = TimeSpan.FromHours(8), AircraftModelId = 3 },
-            new() { Id = 4, Code = "SU400", DepartureCity = "Paris", ArrivalCity = "Tokyo", DepartureDate = DateTime.Now.AddDays(-1), ArrivalDate = DateTime.Now.AddDays(-1).AddHours(12), Duration = TimeSpan.FromHours(12), AircraftModelId = 4 },
-            new() { Id = 5, Code = "SU500", DepartureCity = "Berlin", ArrivalCity = "Dubai", DepartureDate = DateTime.Now, ArrivalDate = DateTime.Now.AddHours(6), Duration = TimeSpan.FromHours(6), AircraftModelId = 5 },
-            new() { Id = 6, Code = "SU600", DepartureCity = "Dubai", ArrivalCity = "Singapore", DepartureDate = DateTime.Now.AddDays(1), ArrivalDate = DateTime.Now.AddDays(1).AddHours(7), Duration = TimeSpan.FromHours(7), AircraftModelId = 6 },
-            new() { Id = 7, Code = "SU700", DepartureCity = "Singapore", ArrivalCity = "Sydney", DepartureDate = DateTime.Now.AddDays(2), ArrivalDate = DateTime.Now.AddDays(2).AddHours(8), Duration = TimeSpan.FromHours(8), AircraftModelId = 7 },
-            new() { Id = 8, Code = "SU800", DepartureCity = "Sydney", ArrivalCity = "Los Angeles", DepartureDate = DateTime.Now.AddDays(3), ArrivalDate = DateTime.Now.AddDays(3).AddHours(14), Duration = TimeSpan.FromHours(14), AircraftModelId = 8 },
-            new() { Id = 9, Code = "SU900", DepartureCity = "Los Angeles", ArrivalCity = "Tokyo", DepartureDate = DateTime.Now.AddDays(4), ArrivalDate = DateTime.Now.AddDays(4).AddHours(11), Duration = TimeSpan.FromHours(11), AircraftModelId = 9 },
-            new() { Id = 10, Code = "SU1000", DepartureCity = "Tokyo", ArrivalCity = "Moscow", DepartureDate = DateTime.Now.AddDays(5), ArrivalDate = DateTime.Now.AddDays(5).AddHours(10), Duration = TimeSpan.FromHours(10), AircraftModelId = 10 }
-        };
+        return
+        [
+            new Flight(1, "SU100", "Moscow", "London", DateTime.Now.AddDays(-5), DateTime.Now.AddDays(-5).AddHours(4), TimeSpan.FromHours(4), 1),
+            new Flight(2, "SU200", "Moscow", "Paris", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-3).AddHours(3.5), TimeSpan.FromHours(3.5), 2),
+            new Flight(3, "SU300", "London", "New York", DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-2).AddHours(8), TimeSpan.FromHours(8), 3),
+            new Flight(4, "SU400", "Paris", "Tokyo", DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1).AddHours(12), TimeSpan.FromHours(12), 4),
+            new Flight(5, "SU500", "Berlin", "Dubai", DateTime.Now, DateTime.Now.AddHours(6), TimeSpan.FromHours(6), 5),
+            new Flight(6, "SU600", "Dubai", "Singapore", DateTime.Now.AddDays(1), DateTime.Now.AddDays(1).AddHours(7), TimeSpan.FromHours(7), 6),
+            new Flight(7, "SU700", "Singapore", "Sydney", DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddHours(8), TimeSpan.FromHours(8), 7),
+            new Flight(8, "SU800", "Sydney", "Los Angeles", DateTime.Now.AddDays(3), DateTime.Now.AddDays(3).AddHours(14), TimeSpan.FromHours(14), 8),
+            new Flight(9, "SU900", "Los Angeles", "Tokyo", DateTime.Now.AddDays(4), DateTime.Now.AddDays(4).AddHours(11), TimeSpan.FromHours(11), 9),
+            new Flight(10, "SU1000", "Tokyo", "Moscow", DateTime.Now.AddDays(5), DateTime.Now.AddDays(5).AddHours(10), TimeSpan.FromHours(10), 10)
+        ];
     }
 
     /// <summary>
-    /// Generates passenger data.
+    /// Gets the collection of passengers with valid passport numbers.
     /// </summary>
     /// <returns>List of 10 passengers with unique passport numbers.</returns>
     public static List<Passenger> GetPassengers()
     {
-        return new List<Passenger>
-        {
-            new() { PassportNumber = "3600-123456", FullName = "Ivanov Ivan Ivanovich", DateOfBirth = new DateTime(1980, 5, 15) },
-            new() { PassportNumber = "3605-654321", FullName = "Petrov Petr Petrovich", DateOfBirth = new DateTime(1990, 8, 22) },
-            new() { PassportNumber = "3610-987654", FullName = "Sidorova Anna Sergeevna", DateOfBirth = new DateTime(1985, 3, 10) },
-            new() { PassportNumber = "3615-456789", FullName = "Kuznetsov Alexey Vladimirovich", DateOfBirth = new DateTime(1978, 11, 5) },
-            new() { PassportNumber = "3620-135790", FullName = "Smirnova Elena Dmitrievna", DateOfBirth = new DateTime(1992, 7, 30) },
-            new() { PassportNumber = "3624-246801", FullName = "Popov Mikhail Igorevich", DateOfBirth = new DateTime(1988, 2, 14) },
-            new() { PassportNumber = "3602-112233", FullName = "Volkova Olga Nikolaevna", DateOfBirth = new DateTime(1983, 9, 18) },
-            new() { PassportNumber = "3608-445566", FullName = "Novikov Dmitry Andreevich", DateOfBirth = new DateTime(1995, 12, 3) },
-            new() { PassportNumber = "3612-778899", FullName = "Fedorova Maria Pavlovna", DateOfBirth = new DateTime(1987, 6, 25) },
-            new() { PassportNumber = "3618-990011", FullName = "Orlov Sergey Viktorovich", DateOfBirth = new DateTime(1975, 4, 8) }
-        };
+        return
+        [
+            new() { Id = 1, PassportNumber = "3600-123456", FullName = "Ivanov Ivan Ivanovich", DateOfBirth = new DateTime(1980, 5, 15) },
+            new() { Id = 2, PassportNumber = "3605-654321", FullName = "Petrov Petr Petrovich", DateOfBirth = new DateTime(1990, 8, 22) },
+            new() { Id = 3, PassportNumber = "3610-987654", FullName = "Sidorova Anna Sergeevna", DateOfBirth = new DateTime(1985, 3, 10) },
+            new() { Id = 4, PassportNumber = "3615-456789", FullName = "Kuznetsov Alexey Vladimirovich", DateOfBirth = new DateTime(1978, 11, 5) },
+            new() { Id = 5, PassportNumber = "3620-135790", FullName = "Smirnova Elena Dmitrievna", DateOfBirth = new DateTime(1992, 7, 30) },
+            new() { Id = 6, PassportNumber = "3624-246801", FullName = "Popov Mikhail Igorevich", DateOfBirth = new DateTime(1988, 2, 14) },
+            new() { Id = 7, PassportNumber = "3602-112233", FullName = "Volkova Olga Nikolaevna", DateOfBirth = new DateTime(1983, 9, 18) },
+            new() { Id = 8, PassportNumber = "3608-445566", FullName = "Novikov Dmitry Andreevich", DateOfBirth = new DateTime(1995, 12, 3) },
+            new() { Id = 9, PassportNumber = "3612-778899", FullName = "Fedorova Maria Pavlovna", DateOfBirth = new DateTime(1987, 6, 25) },
+            new() { Id = 10, PassportNumber = "3618-990011", FullName = "Orlov Sergey Viktorovich", DateOfBirth = new DateTime(1975, 4, 8) }
+        ];
     }
 
     /// <summary>
-    /// Generates ticket bookings with seat assignments and baggage weights.
-    /// Creates complex relationships between passengers and flights for testing queries.
+    /// Gets the collection of tickets with established relationships.
+    /// Creates relationships between tickets, flights, and passengers.
     /// </summary>
-    /// <returns>List of 24 tickets with varied baggage scenarios and seat assignments.</returns>
+    /// <returns>List of 24 tickets with proper flight and passenger relationships.</returns>
     public static List<Ticket> GetTickets()
     {
         var flights = GetFlights();
         var passengers = GetPassengers();
 
-        return new List<Ticket>
+        var tickets = new List<Ticket>
         {
             // Flight 1: 3 passengers
-            new() { Id = 1, SeatNumber = "10A", HasHandLuggage = true, BaggageWeight = 15.5, FlightId = 1, PassengerPassportNumber = "3600-123456" },
-            new() { Id = 2, SeatNumber = "10B", HasHandLuggage = false, BaggageWeight = 0, FlightId = 1, PassengerPassportNumber = "3605-654321" },
-            new() { Id = 3, SeatNumber = "10C", HasHandLuggage = true, BaggageWeight = 10.0, FlightId = 1, PassengerPassportNumber = "3610-987654" },
+            new(1, "10A", true, 15.5, 1, flights[0], 1, passengers[0]),
+            new(2, "10B", false, 0, 1, flights[0], 2, passengers[1]),
+            new(3, "10C", true, 10.0, 1, flights[0], 3, passengers[2]),
 
             // Flight 2: 3 passengers
-            new() { Id = 4, SeatNumber = "15A", HasHandLuggage = true, BaggageWeight = 12.0, FlightId = 2, PassengerPassportNumber = "3615-456789" },
-            new() { Id = 5, SeatNumber = "15B", HasHandLuggage = true, BaggageWeight = 8.5, FlightId = 2, PassengerPassportNumber = "3620-135790" },
-            new() { Id = 6, SeatNumber = "15C", HasHandLuggage = false, BaggageWeight = 0, FlightId = 2, PassengerPassportNumber = "3624-246801" },
+            new(4, "15A", true, 12.0, 2, flights[1], 4, passengers[3]),
+            new(5, "15B", true, 8.5, 2, flights[1], 5, passengers[4]),
+            new(6, "15C", false, 0, 2, flights[1], 6, passengers[5]),
 
             // Flight 3: 2 passengers
-            new() { Id = 7, SeatNumber = "20A", HasHandLuggage = true, BaggageWeight = 20.0, FlightId = 3, PassengerPassportNumber = "3602-112233" },
-            new() { Id = 8, SeatNumber = "20B", HasHandLuggage = true, BaggageWeight = 5.5, FlightId = 3, PassengerPassportNumber = "3608-445566" },
+            new(7, "20A", true, 20.0, 3, flights[2], 7, passengers[6]),
+            new(8, "20B", true, 5.5, 3, flights[2], 8, passengers[7]),
 
             // Flight 4: 4 passengers
-            new() { Id = 9, SeatNumber = "25A", HasHandLuggage = false, BaggageWeight = 0, FlightId = 4, PassengerPassportNumber = "3612-778899" },
-            new() { Id = 10, SeatNumber = "25B", HasHandLuggage = true, BaggageWeight = 18.0, FlightId = 4, PassengerPassportNumber = "3618-990011" },
-            new() { Id = 11, SeatNumber = "25C", HasHandLuggage = true, BaggageWeight = 7.5, FlightId = 4, PassengerPassportNumber = "3600-123456" },
-            new() { Id = 12, SeatNumber = "25D", HasHandLuggage = false, BaggageWeight = 0, FlightId = 4, PassengerPassportNumber = "3605-654321" },
+            new(9, "25A", false, 0, 4, flights[3], 9, passengers[8]),
+            new(10, "25B", true, 18.0, 4, flights[3], 10, passengers[9]),
+            new(11, "25C", true, 7.5, 4, flights[3], 1, passengers[0]),
+            new(12, "25D", false, 0, 4, flights[3], 2, passengers[1]),
 
             // Flight 5: 1 passenger
-            new() { Id = 13, SeatNumber = "30A", HasHandLuggage = true, BaggageWeight = 9.0, FlightId = 5, PassengerPassportNumber = "3610-987654" },
+            new(13, "30A", true, 9.0, 5, flights[4], 3, passengers[2]),
 
             // Flight 6: 3 passengers
-            new() { Id = 14, SeatNumber = "35A", HasHandLuggage = true, BaggageWeight = 11.0, FlightId = 6, PassengerPassportNumber = "3615-456789" },
-            new() { Id = 15, SeatNumber = "35B", HasHandLuggage = false, BaggageWeight = 0, FlightId = 6, PassengerPassportNumber = "3620-135790" },
-            new() { Id = 16, SeatNumber = "35C", HasHandLuggage = true, BaggageWeight = 6.5, FlightId = 6, PassengerPassportNumber = "3624-246801" },
+            new(14, "35A", true, 11.0, 6, flights[5], 4, passengers[3]),
+            new(15, "35B", false, 0, 6, flights[5], 5, passengers[4]),
+            new(16, "35C", true, 6.5, 6, flights[5], 6, passengers[5]),
 
             // Flight 7: 2 passengers
-            new() { Id = 17, SeatNumber = "40A", HasHandLuggage = true, BaggageWeight = 14.0, FlightId = 7, PassengerPassportNumber = "3602-112233" },
-            new() { Id = 18, SeatNumber = "40B", HasHandLuggage = false, BaggageWeight = 0, FlightId = 7, PassengerPassportNumber = "3608-445566" },
+            new(17, "40A", true, 14.0, 7, flights[6], 7, passengers[6]),
+            new(18, "40B", false, 0, 7, flights[6], 8, passengers[7]),
 
             // Flight 8: 1 passenger
-            new() { Id = 19, SeatNumber = "45A", HasHandLuggage = true, BaggageWeight = 16.5, FlightId = 8, PassengerPassportNumber = "3612-778899" },
+            new(19, "45A", true, 16.5, 8, flights[7], 9, passengers[8]),
 
             // Flight 9: 2 passengers
-            new() { Id = 20, SeatNumber = "50A", HasHandLuggage = true, BaggageWeight = 13.0, FlightId = 9, PassengerPassportNumber = "3618-990011" },
-            new() { Id = 21, SeatNumber = "50B", HasHandLuggage = false, BaggageWeight = 0, FlightId = 9, PassengerPassportNumber = "3600-123456" },
+            new(20, "50A", true, 13.0, 9, flights[8], 10, passengers[9]),
+            new(21, "50B", false, 0, 9, flights[8], 1, passengers[0]),
 
             // Flight 10: 3 passengers
-            new() { Id = 22, SeatNumber = "55A", HasHandLuggage = true, BaggageWeight = 8.0, FlightId = 10, PassengerPassportNumber = "3605-654321" },
-            new() { Id = 23, SeatNumber = "55B", HasHandLuggage = true, BaggageWeight = 19.5, FlightId = 10, PassengerPassportNumber = "3610-987654" },
-            new() { Id = 24, SeatNumber = "55C", HasHandLuggage = false, BaggageWeight = 0, FlightId = 10, PassengerPassportNumber = "3615-456789" }
+            new(22, "55A", true, 8.0, 10, flights[9], 2, passengers[1]),
+            new(23, "55B", true, 19.5, 10, flights[9], 3, passengers[2]),
+            new(24, "55C", false, 0, 10, flights[9], 4, passengers[3])
         };
+
+        foreach (var ticket in tickets)
+        {
+            ticket.Flight.Tickets.Add(ticket);
+            ticket.Passenger.Tickets.Add(ticket);
+        }
+
+        return tickets;
+    }
+    public class MockDataFixture
+    {
+        public List<AircraftFamily> AircraftFamilies { get; private set; }
+        public List<AircraftModel> AircraftModels { get; private set; }
+        public List<Flight> Flights { get; private set; }
+        public List<Passenger> Passengers { get; private set; }
+        public List<Ticket> Tickets { get; private set; }
+
+        public MockDataFixture()
+        {
+            AircraftFamilies = MockData.GetAircraftFamilies();
+            AircraftModels = MockData.GetAircraftModels();
+            Flights = MockData.GetFlights();
+            Passengers = MockData.GetPassengers();
+            Tickets = MockData.GetTickets();
+        }
     }
 }

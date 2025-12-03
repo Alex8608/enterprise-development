@@ -23,5 +23,5 @@ public class AircraftFamily
     /// <summary>
     /// Collection of aircraft models belonging to this family.
     /// </summary>
-    public List<AircraftModel> Models { get; set; } = new();
+    public List<AircraftModel> Models { get; set; } = [];
 }

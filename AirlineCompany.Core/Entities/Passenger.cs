@@ -6,7 +6,12 @@
 public class Passenger
 {
     /// <summary>
-    /// Passport number serving as the primary identifier.
+    /// Unique identifier for the passenger.
+    /// </summary>
+    public required int Id { get; set; }
+
+    /// <summary>
+    /// Passport number - must be unique.
     /// </summary>
     public required string PassportNumber { get; set; }
 
@@ -23,5 +28,5 @@ public class Passenger
     /// <summary>
     /// Collection of tickets booked by the passenger.
     /// </summary>
-    public List<Ticket> Tickets { get; set; } = new();
+    public List<Ticket> Tickets { get; set; } = [];
 }
