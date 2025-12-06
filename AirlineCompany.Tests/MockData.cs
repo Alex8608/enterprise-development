@@ -58,16 +58,126 @@ public static class MockData
     {
         return
         [
-            new Flight(1, "SU100", "Moscow", "London", DateTime.Now.AddDays(-5), DateTime.Now.AddDays(-5).AddHours(4), TimeSpan.FromHours(4), 1),
-            new Flight(2, "SU200", "Moscow", "Paris", DateTime.Now.AddDays(-3), DateTime.Now.AddDays(-3).AddHours(3.5), TimeSpan.FromHours(3.5), 2),
-            new Flight(3, "SU300", "London", "New York", DateTime.Now.AddDays(-2), DateTime.Now.AddDays(-2).AddHours(8), TimeSpan.FromHours(8), 3),
-            new Flight(4, "SU400", "Paris", "Tokyo", DateTime.Now.AddDays(-1), DateTime.Now.AddDays(-1).AddHours(12), TimeSpan.FromHours(12), 4),
-            new Flight(5, "SU500", "Berlin", "Dubai", DateTime.Now, DateTime.Now.AddHours(6), TimeSpan.FromHours(6), 5),
-            new Flight(6, "SU600", "Dubai", "Singapore", DateTime.Now.AddDays(1), DateTime.Now.AddDays(1).AddHours(7), TimeSpan.FromHours(7), 6),
-            new Flight(7, "SU700", "Singapore", "Sydney", DateTime.Now.AddDays(2), DateTime.Now.AddDays(2).AddHours(8), TimeSpan.FromHours(8), 7),
-            new Flight(8, "SU800", "Sydney", "Los Angeles", DateTime.Now.AddDays(3), DateTime.Now.AddDays(3).AddHours(14), TimeSpan.FromHours(14), 8),
-            new Flight(9, "SU900", "Los Angeles", "Tokyo", DateTime.Now.AddDays(4), DateTime.Now.AddDays(4).AddHours(11), TimeSpan.FromHours(11), 9),
-            new Flight(10, "SU1000", "Tokyo", "Moscow", DateTime.Now.AddDays(5), DateTime.Now.AddDays(5).AddHours(10), TimeSpan.FromHours(10), 10)
+            new()
+            {
+                Id = 1,
+                Code = "SU100",
+                DepartureCity = "Moscow",
+                ArrivalCity = "London",
+                DepartureDate = DateTime.Now.AddDays(-5),
+                ArrivalDate = DateTime.Now.AddDays(-5).AddHours(4),
+                Duration = TimeSpan.FromHours(4),
+                AircraftModelId = 1,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 2,
+                Code = "SU200",
+                DepartureCity = "Moscow",
+                ArrivalCity = "Paris",
+                DepartureDate = DateTime.Now.AddDays(-3),
+                ArrivalDate = DateTime.Now.AddDays(-3).AddHours(3.5),
+                Duration = TimeSpan.FromHours(3.5),
+                AircraftModelId = 2,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 3,
+                Code = "SU300",
+                DepartureCity = "London",
+                ArrivalCity = "New York",
+                DepartureDate = DateTime.Now.AddDays(-2),
+                ArrivalDate = DateTime.Now.AddDays(-2).AddHours(8),
+                Duration = TimeSpan.FromHours(8),
+                AircraftModelId = 3,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 4,
+                Code = "SU400",
+                DepartureCity = "Paris",
+                ArrivalCity = "Tokyo",
+                DepartureDate = DateTime.Now.AddDays(-1),
+                ArrivalDate = DateTime.Now.AddDays(-1).AddHours(12),
+                Duration = TimeSpan.FromHours(12),
+                AircraftModelId = 4,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 5,
+                Code = "SU500",
+                DepartureCity = "Berlin",
+                ArrivalCity = "Dubai",
+                DepartureDate = DateTime.Now,
+                ArrivalDate = DateTime.Now.AddHours(6),
+                Duration = TimeSpan.FromHours(6),
+                AircraftModelId = 5,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 6,
+                Code = "SU600",
+                DepartureCity = "Dubai",
+                ArrivalCity = "Singapore",
+                DepartureDate = DateTime.Now.AddDays(1),
+                ArrivalDate = DateTime.Now.AddDays(1).AddHours(7),
+                Duration = TimeSpan.FromHours(7),
+                AircraftModelId = 6,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 7,
+                Code = "SU700",
+                DepartureCity = "Singapore",
+                ArrivalCity = "Sydney",
+                DepartureDate = DateTime.Now.AddDays(2),
+                ArrivalDate = DateTime.Now.AddDays(2).AddHours(8),
+                Duration = TimeSpan.FromHours(8),
+                AircraftModelId = 7,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 8,
+                Code = "SU800",
+                DepartureCity = "Sydney",
+                ArrivalCity = "Los Angeles",
+                DepartureDate = DateTime.Now.AddDays(3),
+                ArrivalDate = DateTime.Now.AddDays(3).AddHours(14),
+                Duration = TimeSpan.FromHours(14),
+                AircraftModelId = 8,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 9,
+                Code = "SU900",
+                DepartureCity = "Los Angeles",
+                ArrivalCity = "Tokyo",
+                DepartureDate = DateTime.Now.AddDays(4),
+                ArrivalDate = DateTime.Now.AddDays(4).AddHours(11),
+                Duration = TimeSpan.FromHours(11),
+                AircraftModelId = 9,
+                Tickets = []
+            },
+            new()
+            {
+                Id = 10,
+                Code = "SU1000",
+                DepartureCity = "Tokyo",
+                ArrivalCity = "Moscow",
+                DepartureDate = DateTime.Now.AddDays(5),
+                ArrivalDate = DateTime.Now.AddDays(5).AddHours(10),
+                Duration = TimeSpan.FromHours(10),
+                AircraftModelId = 10,
+                Tickets = []
+            }
         ];
     }
 
@@ -97,81 +207,80 @@ public static class MockData
     /// Creates relationships between tickets, flights, and passengers.
     /// </summary>
     /// <returns>List of 24 tickets with proper flight and passenger relationships.</returns>
-    public static List<Ticket> GetTickets()
+    public static List<Ticket> GetTickets(List<Flight> flights, List<Passenger> passengers)
     {
-        var flights = GetFlights();
-        var passengers = GetPassengers();
+        var flightDict = flights.ToDictionary(f => f.Id);
+        var passengerDict = passengers.ToDictionary(p => p.Id);
 
-        var tickets = new List<Ticket>
+        var tickets = new List<Ticket>();
+
+        Ticket CreateTicket(int id, string seat, bool hasLuggage, double weight, int flightId, int passengerId)
         {
-            // Flight 1: 3 passengers
-            new(1, "10A", true, 15.5, 1, flights[0], 1, passengers[0]),
-            new(2, "10B", false, 0, 1, flights[0], 2, passengers[1]),
-            new(3, "10C", true, 10.0, 1, flights[0], 3, passengers[2]),
+            var flight = flightDict[flightId];
+            var passenger = passengerDict[passengerId];
 
-            // Flight 2: 3 passengers
-            new(4, "15A", true, 12.0, 2, flights[1], 4, passengers[3]),
-            new(5, "15B", true, 8.5, 2, flights[1], 5, passengers[4]),
-            new(6, "15C", false, 0, 2, flights[1], 6, passengers[5]),
+            var ticket = new Ticket
+            {
+                Id = id,
+                SeatNumber = seat,
+                HasHandLuggage = hasLuggage,
+                BaggageWeight = weight,
+                FlightId = flightId,
+                Flight = flight,
+                PassengerId = passengerId,
+                Passenger = passenger
+            };
 
-            // Flight 3: 2 passengers
-            new(7, "20A", true, 20.0, 3, flights[2], 7, passengers[6]),
-            new(8, "20B", true, 5.5, 3, flights[2], 8, passengers[7]),
+            flight.Tickets.Add(ticket);
+            passenger.Tickets.Add(ticket);
 
-            // Flight 4: 4 passengers
-            new(9, "25A", false, 0, 4, flights[3], 9, passengers[8]),
-            new(10, "25B", true, 18.0, 4, flights[3], 10, passengers[9]),
-            new(11, "25C", true, 7.5, 4, flights[3], 1, passengers[0]),
-            new(12, "25D", false, 0, 4, flights[3], 2, passengers[1]),
-
-            // Flight 5: 1 passenger
-            new(13, "30A", true, 9.0, 5, flights[4], 3, passengers[2]),
-
-            // Flight 6: 3 passengers
-            new(14, "35A", true, 11.0, 6, flights[5], 4, passengers[3]),
-            new(15, "35B", false, 0, 6, flights[5], 5, passengers[4]),
-            new(16, "35C", true, 6.5, 6, flights[5], 6, passengers[5]),
-
-            // Flight 7: 2 passengers
-            new(17, "40A", true, 14.0, 7, flights[6], 7, passengers[6]),
-            new(18, "40B", false, 0, 7, flights[6], 8, passengers[7]),
-
-            // Flight 8: 1 passenger
-            new(19, "45A", true, 16.5, 8, flights[7], 9, passengers[8]),
-
-            // Flight 9: 2 passengers
-            new(20, "50A", true, 13.0, 9, flights[8], 10, passengers[9]),
-            new(21, "50B", false, 0, 9, flights[8], 1, passengers[0]),
-
-            // Flight 10: 3 passengers
-            new(22, "55A", true, 8.0, 10, flights[9], 2, passengers[1]),
-            new(23, "55B", true, 19.5, 10, flights[9], 3, passengers[2]),
-            new(24, "55C", false, 0, 10, flights[9], 4, passengers[3])
-        };
-
-        foreach (var ticket in tickets)
-        {
-            ticket.Flight.Tickets.Add(ticket);
-            ticket.Passenger.Tickets.Add(ticket);
+            return ticket;
         }
+
+        // Flight 1: 3 passengers
+        tickets.Add(CreateTicket(1, "10A", true, 15.5, 1, 1));
+        tickets.Add(CreateTicket(2, "10B", false, 0, 1, 2));
+        tickets.Add(CreateTicket(3, "10C", true, 10.0, 1, 3));
+
+        // Flight 2: 3 passengers
+        tickets.Add(CreateTicket(4, "15A", true, 12.0, 2, 4));
+        tickets.Add(CreateTicket(5, "15B", true, 8.5, 2, 5));
+        tickets.Add(CreateTicket(6, "15C", false, 0, 2, 6));
+
+        // Flight 3: 2 passengers
+        tickets.Add(CreateTicket(7, "20A", true, 20.0, 3, 7));
+        tickets.Add(CreateTicket(8, "20B", true, 5.5, 3, 8));
+
+        // Flight 4: 4 passengers
+        tickets.Add(CreateTicket(9, "25A", false, 0, 4, 9));
+        tickets.Add(CreateTicket(10, "25B", true, 18.0, 4, 10));
+        tickets.Add(CreateTicket(11, "25C", true, 7.5, 4, 1));
+        tickets.Add(CreateTicket(12, "25D", false, 0, 4, 2));
+
+        // Flight 5: 1 passenger
+        tickets.Add(CreateTicket(13, "30A", true, 9.0, 5, 3));
+
+        // Flight 6: 3 passengers
+        tickets.Add(CreateTicket(14, "35A", true, 11.0, 6, 4));
+        tickets.Add(CreateTicket(15, "35B", false, 0, 6, 5));
+        tickets.Add(CreateTicket(16, "35C", true, 6.5, 6, 6));
+
+        // Flight 7: 2 passengers
+        tickets.Add(CreateTicket(17, "40A", true, 14.0, 7, 7));
+        tickets.Add(CreateTicket(18, "40B", false, 0, 7, 8));
+
+        // Flight 8: 1 passenger
+        tickets.Add(CreateTicket(19, "45A", true, 16.5, 8, 9));
+
+        // Flight 9: 2 passengers
+        tickets.Add(CreateTicket(20, "50A", true, 13.0, 9, 10));
+        tickets.Add(CreateTicket(21, "50B", false, 0, 9, 1));
+
+        // Flight 10: 3 passengers
+        tickets.Add(CreateTicket(22, "55A", true, 8.0, 10, 2));
+        tickets.Add(CreateTicket(23, "55B", true, 19.5, 10, 3));
+        tickets.Add(CreateTicket(24, "55C", false, 0, 10, 4));
 
         return tickets;
-    }
-    public class MockDataFixture
-    {
-        public List<AircraftFamily> AircraftFamilies { get; private set; }
-        public List<AircraftModel> AircraftModels { get; private set; }
-        public List<Flight> Flights { get; private set; }
-        public List<Passenger> Passengers { get; private set; }
-        public List<Ticket> Tickets { get; private set; }
-
-        public MockDataFixture()
-        {
-            AircraftFamilies = MockData.GetAircraftFamilies();
-            AircraftModels = MockData.GetAircraftModels();
-            Flights = MockData.GetFlights();
-            Passengers = MockData.GetPassengers();
-            Tickets = MockData.GetTickets();
-        }
     }
 }

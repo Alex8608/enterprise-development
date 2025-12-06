@@ -1,6 +1,4 @@
-﻿using static AirlineCompany.Tests.MockData;
-
-namespace AirlineCompany.Tests;
+﻿namespace AirlineCompany.Tests;
 
 /// <summary>
 /// Contains unit tests for airline company data queries using LINQ.
