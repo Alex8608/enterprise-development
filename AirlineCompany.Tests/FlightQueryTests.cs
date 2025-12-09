@@ -3,19 +3,9 @@
 /// <summary>
 /// Contains unit tests for airline company data queries using LINQ.
 /// </summary>
-public class FlightQueryTests : IClassFixture<MockDataFixture>
+public class FlightQueryTests(MockDataFixture fixture) : IClassFixture<MockDataFixture>
 {
-    private readonly MockDataFixture _fixture;
-
-    /// <summary>
-    /// Initializes a new instance of the FlightQueryTests class.
-    /// Receives shared mock data through dependency injection.
-    /// </summary>
-    /// <param name="fixture">Fixture providing shared test data.</param>
-    public FlightQueryTests(MockDataFixture fixture)
-    {
-        _fixture = fixture;
-    }
+    private readonly MockDataFixture _fixture = fixture;
 
     /// <summary>
     /// Tests the query for top 5 flights by passenger count.
