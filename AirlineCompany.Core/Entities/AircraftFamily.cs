@@ -8,7 +8,7 @@ public class AircraftFamily
     /// <summary>
     /// Unique identifier for the aircraft family.
     /// </summary>
-    public int Id { get; set; }
+    public required int Id { get; set; }
 
     /// <summary>
     /// Name of the aircraft family (e.g., "A320", "737").

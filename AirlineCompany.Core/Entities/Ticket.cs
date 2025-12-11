@@ -33,7 +33,7 @@ public class Ticket
     /// <summary>
     /// Navigation property to the flight.
     /// </summary>
-    public required Flight Flight { get; set; }
+    public virtual Flight? Flight { get; set; }
 
     /// <summary>
     /// Foreign key to the passenger.
@@ -43,5 +43,5 @@ public class Ticket
     /// <summary>
     /// Navigation property to the passenger.
     /// </summary>
-    public required Passenger Passenger { get; set; }
+    public virtual Passenger? Passenger { get; set; }
 }

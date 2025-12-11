@@ -79,7 +79,7 @@ public class FlightQueryTests(MockDataFixture fixture) : IClassFixture<MockDataF
         var passengersWithNoBaggage = tickets
             .Where(t => t.Flight != null && t.Flight.Id == selectedFlightId && t.BaggageWeight == 0 && t.Passenger != null)
             .Select(t => t.Passenger)
-            .OrderBy(p => p.FullName)
+            .OrderBy(p => p!.FullName)
             .ToList();
 
         Assert.True(passengersWithNoBaggage.Count > 0);
@@ -89,7 +89,7 @@ public class FlightQueryTests(MockDataFixture fixture) : IClassFixture<MockDataF
         {
             Assert.NotNull(passengersWithNoBaggage[i]);
             Assert.NotNull(passengersWithNoBaggage[i + 1]);
-            Assert.True(string.Compare(passengersWithNoBaggage[i].FullName, passengersWithNoBaggage[i + 1].FullName) <= 0);
+            Assert.True(string.Compare(passengersWithNoBaggage[i]!.FullName, passengersWithNoBaggage[i + 1]!.FullName) <= 0);
         }
 
         // Additional verification: ensure selected passengers truly have zero baggage
