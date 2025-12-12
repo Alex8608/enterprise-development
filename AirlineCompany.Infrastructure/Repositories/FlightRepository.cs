@@ -13,41 +13,41 @@ public class FlightRepository(AppDbContext dbContext) : IRepository<Flight>
     /// <summary>
     /// Create a new Flight record
     /// </summary>
-    public int Create(Flight entity)
+    public async Task<int> Create(Flight entity)
     {
-        dbContext.Flights.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.Flights.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all Flight records
     /// </summary>
-    public List<Flight> Read() =>
-        dbContext.Flights
+    public async Task<List<Flight>> Read() =>
+        await dbContext.Flights
             .Include(x => x.AircraftModel)
                 .ThenInclude(m => m!.AircraftFamily)
             .Include(x => x.Tickets)
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
 
     /// <summary>
     /// Return Flight by ID
     /// </summary>
-    public Flight? Read(int id) =>
-        dbContext.Flights
+    public async Task<Flight?> Read(int id) =>
+        await dbContext.Flights
             .Include(x => x.AircraftModel)
                 .ThenInclude(m => m!.AircraftFamily)
             .Include(x => x.Tickets)
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
 
     /// <summary>
     /// Update Flight by ID
     /// </summary>
-    public Flight? Update(int id, Flight entity)
+    public async Task<Flight?> Update(int id, Flight entity)
     {
-        var existingEntity = dbContext.Flights.Find(id);
+        var existingEntity = await dbContext.Flights.FindAsync(id);
         if (existingEntity == null) return null;
 
         existingEntity.Code = entity.Code;
@@ -58,15 +58,18 @@ public class FlightRepository(AppDbContext dbContext) : IRepository<Flight>
         existingEntity.Duration = entity.Duration;
         existingEntity.AircraftModelId = entity.AircraftModelId;
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
-        dbContext.Entry(existingEntity)
+        await dbContext.Entry(existingEntity)
             .Reference(f => f.AircraftModel)
-            .Load();
+            .LoadAsync();
 
-        dbContext.Entry(existingEntity.AircraftModel!)
-            .Reference(m => m.AircraftFamily)
-            .Load();
+        if (existingEntity.AircraftModel != null)
+        {
+            await dbContext.Entry(existingEntity.AircraftModel)
+                .Reference(m => m.AircraftFamily)
+                .LoadAsync();
+        }
 
         return existingEntity;
     }
@@ -74,14 +77,14 @@ public class FlightRepository(AppDbContext dbContext) : IRepository<Flight>
     /// <summary>
     /// Delete Flight by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var existingEntity = dbContext.Flights.Find(id);
+        var existingEntity = await dbContext.Flights.FindAsync(id);
 
         if (existingEntity == null) return false;
 
         dbContext.Flights.Remove(existingEntity);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return true;
     }
@@ -89,8 +92,8 @@ public class FlightRepository(AppDbContext dbContext) : IRepository<Flight>
     /// <summary>
     /// Get top N flights by passenger count
     /// </summary>
-    public List<Flight> GetTopFlightsByPassengerCount(int topN) =>
-        dbContext.Flights
+    public async Task<List<Flight>> GetTopFlightsByPassengerCount(int topN) =>
+        await dbContext.Flights
             .Include(f => f.Tickets)
             .Select(f => new
             {
@@ -100,32 +103,32 @@ public class FlightRepository(AppDbContext dbContext) : IRepository<Flight>
             .OrderByDescending(x => x.PassengerCount)
             .Take(topN)
             .Select(x => x.Flight)
-            .ToList();
+            .ToListAsync();
 
     /// <summary>
     /// Get flights with minimal duration
     /// </summary>
-    public List<Flight> GetFlightsWithMinimalDuration()
+    public async Task<List<Flight>> GetFlightsWithMinimalDuration()
     {
-        var minDuration = dbContext.Flights.Min(f => f.Duration);
-        return dbContext.Flights
+        var minDuration = await dbContext.Flights.MinAsync(f => f.Duration);
+        return await dbContext.Flights
             .Where(f => f.Duration == minDuration)
-            .ToList();
+            .ToListAsync();
     }
 
     /// <summary>
     /// Get flights by departure and arrival cities
     /// </summary>
-    public List<Flight> GetFlightsByRoute(string departureCity, string arrivalCity) =>
-        dbContext.Flights
+    public async Task<List<Flight>> GetFlightsByRoute(string departureCity, string arrivalCity) =>
+        await dbContext.Flights
             .Where(f => f.DepartureCity == departureCity && f.ArrivalCity == arrivalCity)
-            .ToList();
+            .ToListAsync();
 
     /// <summary>
     /// Get flights within specified time period
     /// </summary>
-    public List<Flight> GetFlightsInPeriod(DateTime startDate, DateTime endDate) =>
-        dbContext.Flights
-            .Where(f => f.DepartureDate >= startDate && f.DepartureDate <= endDate)
-            .ToList();
+    public async Task<List<Flight>> GetFlightsInPeriod(DateTime startDate, DateTime endDate) =>
+         await dbContext.Flights
+             .Where(f => f.DepartureDate >= startDate && f.DepartureDate <= endDate)
+             .ToListAsync();
 }

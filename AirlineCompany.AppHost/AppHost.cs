@@ -1,11 +1,11 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var sql = builder.AddSqlServer("sqlserver")
+var db = builder.AddSqlServer("sqlserver")
     .WithDataVolume()
     .AddDatabase("AirlineCompanyDb");
 
 builder.AddProject<Projects.AirlineCompany_API>("airline-api")
-    .WithReference(sql)
+    .WithReference(db)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

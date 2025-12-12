@@ -13,37 +13,37 @@ public class AircraftModelRepository(AppDbContext dbContext) : IRepository<Aircr
     /// <summary>
     /// Create a new AircraftModel record
     /// </summary>
-    public int Create(AircraftModel entity)
+    public async Task<int> Create(AircraftModel entity)
     {
-        dbContext.AircraftModels.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.AircraftModels.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all AircraftModel records
     /// </summary>
-    public List<AircraftModel> Read() =>
-        dbContext.AircraftModels
+    public async Task<List<AircraftModel>> Read() =>
+        await dbContext.AircraftModels
             .Include(x => x.AircraftFamily)
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
 
     /// <summary>
     /// Return AircraftModel by ID
     /// </summary>
-    public AircraftModel? Read(int id) =>
-        dbContext.AircraftModels
+    public async Task<AircraftModel?> Read(int id) =>
+        await dbContext.AircraftModels
             .Include(x => x.AircraftFamily)
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
 
     /// <summary>
     /// Update AircraftModel by ID
     /// </summary>
-    public AircraftModel? Update(int id, AircraftModel entity)
+    public async Task<AircraftModel?> Update(int id, AircraftModel entity)
     {
-        var existingEntity = dbContext.AircraftModels.Find(id);
+        var existingEntity = await dbContext.AircraftModels.FindAsync(id);
 
         if (existingEntity == null) return null;
 
@@ -52,11 +52,11 @@ public class AircraftModelRepository(AppDbContext dbContext) : IRepository<Aircr
         existingEntity.Range = entity.Range;
         existingEntity.PassengerCapacity = entity.PassengerCapacity;
         existingEntity.CargoCapacity = entity.CargoCapacity;
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
-        dbContext.Entry(existingEntity)
+        await dbContext.Entry(existingEntity)
             .Reference(m => m.AircraftFamily)
-            .Load();
+            .LoadAsync();
 
         return existingEntity;
     }
@@ -64,14 +64,14 @@ public class AircraftModelRepository(AppDbContext dbContext) : IRepository<Aircr
     /// <summary>
     /// Delete AircraftModel by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var existingEntity = dbContext.AircraftModels.Find(id);
+        var existingEntity = await dbContext.AircraftModels.FindAsync(id);
 
         if (existingEntity == null) return false;
 
         dbContext.AircraftModels.Remove(existingEntity);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return true;
     }

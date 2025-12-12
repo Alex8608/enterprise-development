@@ -1,13 +1,14 @@
 ﻿using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.DTO;
+using AirlineCompany.DTO.Services;
 
 namespace AirlineCompany.Application.Services;
 
 /// <summary>
 /// Service for managing passenger entities
 /// </summary>
-public class PassengerService(IRepository<Passenger> repository)
+public class PassengerService(IRepository<Passenger> repository) : IPassengerService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -30,52 +31,51 @@ public class PassengerService(IRepository<Passenger> repository)
     /// <summary>
     /// Create a new passenger record
     /// </summary>
-    public int CreatePassenger(PassengerCreateDTO dto)
+    public async Task<int> CreatePassenger(PassengerCreateDTO dto)
     {
-        // Check for duplicate passport number
-        var existing = repository.Read()
+        var existing = (await repository.Read())
             .FirstOrDefault(p => p.PassportNumber == dto.PassportNumber);
 
         if (existing != null)
             throw new ArgumentException($"Passenger with passport number {dto.PassportNumber} already exists");
 
-        return repository.Create(MapDto(dto));
+        return await repository.Create(MapDto(dto));
     }
 
     /// <summary>
     /// Get all passengers
     /// </summary>
-    public List<PassengerDTO> GetPassengers() =>
-        repository.Read().Select(MapReadDto).ToList();
+    public async Task<List<PassengerDTO>> GetPassengers() =>
+        [.. (await repository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get passenger by ID
     /// </summary>
-    public PassengerDTO? GetPassenger(int id)
+    public async Task<PassengerDTO?> GetPassenger(int id)
     {
-        var entity = repository.Read(id);
+        var entity = await repository.Read(id);
         return entity == null ? null : MapReadDto(entity);
     }
 
     /// <summary>
     /// Update passenger by ID
     /// </summary>
-    public PassengerDTO? UpdatePassenger(int id, PassengerCreateDTO dto)
+    public async Task<PassengerDTO?> UpdatePassenger(int id, PassengerCreateDTO dto)
     {
-        var existing = repository.Read()
+        var existing = (await repository.Read())
             .FirstOrDefault(p => p.PassportNumber == dto.PassportNumber && p.Id != id);
 
         if (existing != null)
             throw new ArgumentException($"Passport number {dto.PassportNumber} is already used by another passenger");
 
         var entity = MapDto(dto);
-        var updated = repository.Update(id, entity);
+        var updated = await repository.Update(id, entity);
         return updated == null ? null : MapReadDto(updated);
     }
 
     /// <summary>
     /// Delete passenger by ID
     /// </summary>
-    public bool DeletePassenger(int id) =>
-        repository.Delete(id);
+    public async Task<bool> DeletePassenger(int id) =>
+       await repository.Delete(id);
 }

@@ -1,13 +1,14 @@
 ﻿using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.DTO;
+using AirlineCompany.DTO.Services;
 
 namespace AirlineCompany.Application.Services;
 
 /// <summary>
 /// Service for managing aircraft family entities
 /// </summary>
-public class AircraftFamilyService(IRepository<AircraftFamily> repository)
+public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAircraftFamilyService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -29,36 +30,36 @@ public class AircraftFamilyService(IRepository<AircraftFamily> repository)
     /// <summary>
     /// Create a new aircraft family record
     /// </summary>
-    public int CreateAircraftFamily(AircraftFamilyCreateDTO dto) =>
-        repository.Create(MapDto(dto));
+    public async Task<int> CreateAircraftFamily(AircraftFamilyCreateDTO dto) =>
+        await repository.Create(MapDto(dto));
 
     /// <summary>
     /// Get all aircraft families
     /// </summary>
-    public List<AircraftFamilyDTO> GetAircraftFamilies() =>
-        repository.Read().Select(MapReadDto).ToList();
+    public async Task<List<AircraftFamilyDTO>> GetAircraftFamilies() =>
+        [.. (await repository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get aircraft family by ID
     /// </summary>
-    public AircraftFamilyDTO? GetAircraftFamily(int id)
+    public async Task<AircraftFamilyDTO?> GetAircraftFamily(int id)
     {
-        var entity = repository.Read(id);
+        var entity = await repository.Read(id);
         return entity == null ? null : MapReadDto(entity);
     }
 
     /// <summary>
     /// Update aircraft family by ID
     /// </summary>
-    public AircraftFamilyDTO? UpdateAircraftFamily(int id, AircraftFamilyCreateDTO dto)
+    public async Task<AircraftFamilyDTO?> UpdateAircraftFamily(int id, AircraftFamilyCreateDTO dto)
     {
-        var entity = repository.Update(id, MapDto(dto));
+        var entity = await repository.Update(id, MapDto(dto));
         return entity == null ? null : MapReadDto(entity);
     }
 
     /// <summary>
     /// Delete aircraft family by ID
     /// </summary>
-    public bool DeleteAircraftFamily(int id) =>
-        repository.Delete(id);
+    public async Task<bool> DeleteAircraftFamily(int id) =>
+        await repository.Delete(id);
 }

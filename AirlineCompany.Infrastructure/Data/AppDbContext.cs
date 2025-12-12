@@ -42,7 +42,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
 
-        var seeder = new DataSeeder();
 
         modelBuilder.Entity<AircraftFamily>(entity =>
         {
@@ -50,7 +49,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.Property(x => x.Name).IsRequired();
             entity.Property(x => x.Manufacturer).IsRequired();
 
-            entity.HasData(seeder.AircraftFamilies);
+            entity.HasData(DataSeeder.AircraftFamilies);
         });
 
         modelBuilder.Entity<AircraftModel>(entity =>
@@ -67,7 +66,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(x => x.AircraftFamilyId)
                 .IsRequired();
 
-            entity.HasData(seeder.AircraftModels);
+            entity.HasData(DataSeeder.AircraftModels);
         });
 
         modelBuilder.Entity<Flight>(entity =>
@@ -86,7 +85,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasForeignKey(x => x.AircraftModelId)
                 .IsRequired();
 
-            entity.HasData(seeder.Flights);
+            entity.HasData(DataSeeder.Flights);
         });
 
         modelBuilder.Entity<Passenger>(entity =>
@@ -98,7 +97,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.HasIndex(x => x.PassportNumber).IsUnique();
 
-            entity.HasData(seeder.Passengers);
+            entity.HasData(DataSeeder.Passengers);
         });
 
         modelBuilder.Entity<Ticket>(entity =>
@@ -122,7 +121,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.HasIndex(x => new { x.FlightId, x.SeatNumber }).IsUnique();
 
-            entity.HasData(seeder.Tickets);
+            entity.HasData(DataSeeder.Tickets);
         });
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.DTO;
+using AirlineCompany.DTO.Services;
 
 namespace AirlineCompany.Application.Services;
 
@@ -10,7 +11,7 @@ namespace AirlineCompany.Application.Services;
 public class TicketService(
     IRepository<Ticket> ticketRepository,
     IRepository<Flight> flightRepository,
-    IRepository<Passenger> passengerRepository)
+    IRepository<Passenger> passengerRepository) : ITicketService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -23,9 +24,7 @@ public class TicketService(
             HasHandLuggage = dto.HasHandLuggage,
             BaggageWeight = dto.BaggageWeight,
             FlightId = flight.Id,
-            //Flight = flight,
             PassengerId = passenger.Id,
-            //Passenger = passenger
         };
 
     /// <summary>
@@ -33,7 +32,6 @@ public class TicketService(
     /// </summary>
     private static TicketDTO MapReadDto(Ticket entity)
     {
-        // Map Flight
         var flightDto = new FlightDTO(
             entity.Flight!.Id,
             entity.Flight.Code,
@@ -53,7 +51,6 @@ public class TicketService(
                     entity.Flight.AircraftModel.AircraftFamily.Name,
                     entity.Flight.AircraftModel.AircraftFamily.Manufacturer)));
 
-        // Map Passenger
         var passengerDto = new PassengerDTO(
             entity.Passenger!.Id,
             entity.Passenger.PassportNumber,
@@ -72,74 +69,62 @@ public class TicketService(
     /// <summary>
     /// Create a new ticket record
     /// </summary>
-    public int CreateTicket(TicketCreateDTO dto)
+    public async Task<int> CreateTicket(TicketCreateDTO dto)
     {
-        var flight = flightRepository.Read(dto.FlightId);
-        if (flight == null)
-            throw new ArgumentException("Invalid Flight ID");
-
-        var passenger = passengerRepository.Read(dto.PassengerId);
-        if (passenger == null)
-            throw new ArgumentException("Invalid Passenger ID");
-
-        // Check if seat is already taken on this flight
-        var existingTicket = ticketRepository.Read()
+        var flight = await flightRepository.Read(dto.FlightId) 
+            ?? throw new ArgumentException("Invalid Flight ID");
+        var passenger = await passengerRepository.Read(dto.PassengerId)
+            ?? throw new ArgumentException("Invalid Passenger ID");
+        var existingTicket = (await ticketRepository.Read())
             .FirstOrDefault(t => t.FlightId == dto.FlightId && t.SeatNumber == dto.SeatNumber);
 
         if (existingTicket != null)
             throw new ArgumentException($"Seat {dto.SeatNumber} is already taken on this flight");
 
-        return ticketRepository.Create(MapDto(dto, flight, passenger));
+        return await ticketRepository.Create(MapDto(dto, flight, passenger));
     }
 
     /// <summary>
     /// Get all tickets
     /// </summary>
-    public List<TicketDTO> GetTickets() =>
-        ticketRepository.Read().Select(MapReadDto).ToList();
+    public async Task<List<TicketDTO>> GetTickets() =>
+         [.. (await ticketRepository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get tickets by flight ID
     /// </summary>
-    public List<TicketDTO> GetTicketsByFlightId(int flightId) =>
-        ticketRepository.Read()
+    public async Task<List<TicketDTO>> GetTicketsByFlightId(int flightId) =>
+        [.. (await ticketRepository.Read())
             .Where(t => t.FlightId == flightId)
-            .Select(MapReadDto)
-            .ToList();
+            .Select(MapReadDto)];
 
     /// <summary>
     /// Get tickets by passenger ID
     /// </summary>
-    public List<TicketDTO> GetTicketsByPassengerId(int passengerId) =>
-        ticketRepository.Read()
+    public async Task<List<TicketDTO>> GetTicketsByPassengerId(int passengerId) =>
+       [.. (await ticketRepository.Read())
             .Where(t => t.PassengerId == passengerId)
-            .Select(MapReadDto)
-            .ToList();
+            .Select(MapReadDto)];
 
     /// <summary>
     /// Get ticket by ID
     /// </summary>
-    public TicketDTO? GetTicket(int id)
+    public async Task<TicketDTO?> GetTicket(int id)
     {
-        var entity = ticketRepository.Read(id);
+        var entity = await ticketRepository.Read(id);
         return entity == null ? null : MapReadDto(entity);
     }
 
     /// <summary>
     /// Update ticket by ID
     /// </summary>
-    public TicketDTO? UpdateTicket(int id, TicketCreateDTO dto)
+    public async Task<TicketDTO?> UpdateTicket(int id, TicketCreateDTO dto)
     {
-        var flight = flightRepository.Read(dto.FlightId);
-        if (flight == null)
-            throw new ArgumentException("Invalid Flight ID");
-
-        var passenger = passengerRepository.Read(dto.PassengerId);
-        if (passenger == null)
-            throw new ArgumentException("Invalid Passenger ID");
-
-        // Check if seat is already taken by another ticket on this flight
-        var existingTicket = ticketRepository.Read()
+        var flight = await flightRepository.Read(dto.FlightId) 
+            ?? throw new ArgumentException("Invalid Flight ID");
+        var passenger = await passengerRepository.Read(dto.PassengerId) 
+            ?? throw new ArgumentException("Invalid Passenger ID");
+        var existingTicket = (await ticketRepository.Read())
             .FirstOrDefault(t => t.FlightId == dto.FlightId &&
                                 t.SeatNumber == dto.SeatNumber &&
                                 t.Id != id);
@@ -148,13 +133,13 @@ public class TicketService(
             throw new ArgumentException($"Seat {dto.SeatNumber} is already taken on this flight");
 
         var entity = MapDto(dto, flight, passenger);
-        var updated = ticketRepository.Update(id, entity);
+        var updated = await ticketRepository.Update(id, entity);
         return updated == null ? null : MapReadDto(updated);
     }
 
     /// <summary>
     /// Delete ticket by ID
     /// </summary>
-    public bool DeleteTicket(int id) =>
-        ticketRepository.Delete(id);
+    public async Task<bool> DeleteTicket(int id) =>
+        await ticketRepository.Delete(id);
 }

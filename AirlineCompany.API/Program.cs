@@ -1,9 +1,12 @@
+using AirlineCompany.Application.Services;
 using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
+using AirlineCompany.DTO.Services;
 using AirlineCompany.Infrastructure.Data;
 using AirlineCompany.Infrastructure.Repositories;
 using AirlineCompany.ServiceDefaults;
-using AirlineCompany.Application.Services;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -17,24 +20,54 @@ builder.Services.AddScoped<IRepository<Flight>, FlightRepository>();
 builder.Services.AddScoped<IRepository<Passenger>, PassengerRepository>();
 builder.Services.AddScoped<IRepository<Ticket>, TicketRepository>();
 
-builder.Services.AddScoped<AircraftFamilyService>();
-builder.Services.AddScoped<AircraftModelService>();
-builder.Services.AddScoped<PassengerService>();
-builder.Services.AddScoped<FlightService>();
-builder.Services.AddScoped<TicketService>();
-builder.Services.AddScoped<AnalyticService>();
+builder.Services.AddScoped<IAircraftFamilyService, AircraftFamilyService>();
+builder.Services.AddScoped<IAircraftModelService, AircraftModelService>();
+builder.Services.AddScoped<IFlightService, FlightService>();
+builder.Services.AddScoped<IPassengerService, PassengerService>();
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IAnalyticService, AnalyticService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = false;
+});
+
+builder.Services.AddProblemDetails();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseExceptionHandler(exceptionHandlerApp =>
+{
+    exceptionHandlerApp.Run(async context =>
+    {
+        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        logger.LogError(exception, "Unhandled exception occurred");
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            StatusCode = StatusCodes.Status500InternalServerError,
+            Message = "An internal server error has occurred",
+            TraceId = context.TraceIdentifier
+        });
+    });
+});
+
+app.UseStatusCodePages();
 
 using (var scope = app.Services.CreateScope())
 {

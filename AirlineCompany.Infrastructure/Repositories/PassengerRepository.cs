@@ -13,39 +13,39 @@ public class PassengerRepository(AppDbContext dbContext) : IRepository<Passenger
     /// <summary>
     /// Create a new Passenger record
     /// </summary>
-    public int Create(Passenger entity)
+    public async Task<int> Create(Passenger entity)
     {
-        dbContext.Passengers.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.Passengers.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all Passenger records
     /// </summary>
-    public List<Passenger> Read() =>
-        dbContext.Passengers
+    public async Task<List<Passenger>> Read() =>
+        await dbContext.Passengers
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
 
     /// <summary>
     /// Return Passenger by ID
     /// </summary>
-    public Passenger? Read(int id) =>
-        dbContext.Passengers
+    public async Task<Passenger?> Read(int id) =>
+        await dbContext.Passengers
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
 
     /// <summary>
     /// Update Passenger by ID
     /// </summary>
-    public Passenger? Update(int id, Passenger entity)
+    public async Task<Passenger?> Update(int id, Passenger entity)
     {
-        var existingEntity = dbContext.Passengers.Find(id);
+        var existingEntity = await dbContext.Passengers.FindAsync(id);
         if (existingEntity == null) return null;
 
-        var passportExists = dbContext.Passengers
-        .Any(p => p.PassportNumber == entity.PassportNumber && p.Id != id);
+        var passportExists = await dbContext.Passengers
+            .AnyAsync(p => p.PassportNumber == entity.PassportNumber && p.Id != id);
 
         if (passportExists)
         {
@@ -55,7 +55,7 @@ public class PassengerRepository(AppDbContext dbContext) : IRepository<Passenger
         existingEntity.PassportNumber = entity.PassportNumber;
         existingEntity.FullName = entity.FullName;
         existingEntity.DateOfBirth = entity.DateOfBirth;
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return existingEntity;
     }
@@ -63,14 +63,14 @@ public class PassengerRepository(AppDbContext dbContext) : IRepository<Passenger
     /// <summary>
     /// Delete Passenger by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var existingEntity = dbContext.Passengers.Find(id);
+        var existingEntity = await dbContext.Passengers.FindAsync(id);
 
         if (existingEntity == null) return false;
 
         dbContext.Passengers.Remove(existingEntity);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return true;
     }

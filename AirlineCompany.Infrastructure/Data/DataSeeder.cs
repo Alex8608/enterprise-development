@@ -5,12 +5,12 @@ namespace AirlineCompany.Infrastructure.Data;
 /// <summary>
 /// Provides seed data for the database
 /// </summary>
-public class DataSeeder
+public static class DataSeeder
 {
     /// <summary>
     /// Gets seed data for aircraft families
     /// </summary>
-    public List<AircraftFamily> AircraftFamilies =>
+    public static List<AircraftFamily> AircraftFamilies =>
     [
         new() { Id = 1, Name = "A320", Manufacturer = "Airbus" },
         new() { Id = 2, Name = "737", Manufacturer = "Boeing" },
@@ -27,7 +27,7 @@ public class DataSeeder
     /// <summary>
     /// Gets seed data for aircraft models
     /// </summary>
-    public List<AircraftModel> AircraftModels =>
+    public static List<AircraftModel> AircraftModels =>
     [
         new() { Id = 1, Name = "A320-200", Range = 6100, PassengerCapacity = 180, CargoCapacity = 4.5, AircraftFamilyId = 1 },
         new() { Id = 2, Name = "A321neo", Range = 7400, PassengerCapacity = 240, CargoCapacity = 5.2, AircraftFamilyId = 1 },
@@ -44,7 +44,7 @@ public class DataSeeder
     /// <summary>
     /// Gets seed data for flights
     /// </summary>
-    public List<Flight> Flights =>
+    public static List<Flight> Flights =>
     [
         new()
         {
@@ -161,7 +161,7 @@ public class DataSeeder
     /// <summary>
     /// Gets seed data for passengers
     /// </summary>
-    public List<Passenger> Passengers =>
+    public static List<Passenger> Passengers =>
     [
         new() { Id = 1, PassportNumber = "3600-123456", FullName = "Ivanov Ivan Ivanovich", DateOfBirth = new DateTime(1980, 5, 15) },
         new() { Id = 2, PassportNumber = "3605-654321", FullName = "Petrov Petr Petrovich", DateOfBirth = new DateTime(1990, 8, 22) },
@@ -178,7 +178,7 @@ public class DataSeeder
     /// <summary>
     /// Gets seed data for tickets
     /// </summary>
-    public List<Ticket> Tickets =>
+    public static List<Ticket> Tickets =>
     [
         new() { Id = 1, SeatNumber = "10A", HasHandLuggage = true, BaggageWeight = 15.5, FlightId = 1, PassengerId = 1 },
         new() { Id = 2, SeatNumber = "10B", HasHandLuggage = false, BaggageWeight = 0, FlightId = 1, PassengerId = 2 },

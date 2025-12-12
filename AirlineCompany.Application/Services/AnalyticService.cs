@@ -1,6 +1,7 @@
 ﻿using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.DTO;
+using AirlineCompany.DTO.Services;
 
 namespace AirlineCompany.Application.Services;
 
@@ -10,15 +11,15 @@ namespace AirlineCompany.Application.Services;
 public class AnalyticService(
     IRepository<Flight> flightRepository,
     IRepository<Ticket> ticketRepository,
-    IRepository<Passenger> passengerRepository)
+    IRepository<Passenger> passengerRepository) : IAnalyticService
 {
     /// <summary>
     /// Display the top 5 flights by the number of passengers carried.
     /// </summary>
-    public List<FlightPassengerCountDTO> GetTopFiveFlightsByPassengerCount()
+    public async Task<List<FlightPassengerCountDTO>> GetTopFiveFlightsByPassengerCount()
     {
-        var flights = flightRepository.Read();
-        var tickets = ticketRepository.Read();
+        var flights = await flightRepository.Read();
+        var tickets = await ticketRepository.Read();
 
         var topFive = (
             from f in flights
@@ -35,12 +36,12 @@ public class AnalyticService(
     /// <summary>
     /// Display a list of flights with the minimum travel time.
     /// </summary>
-    public List<FlightDurationDTO> GetFlightsWithMinDuration()
+    public async Task<List<FlightDurationDTO>> GetFlightsWithMinDuration()
     {
-        var flights = flightRepository.Read();
+        var flights = await flightRepository.Read();
 
-        if (!flights.Any())
-            return new List<FlightDurationDTO>();
+        if (flights.Count == 0)
+            return [];
 
         var minDuration = flights.Min(f => f.Duration);
 
@@ -55,15 +56,15 @@ public class AnalyticService(
     /// <summary>
     /// Display information about all passengers flying on the selected flight whose baggage weight is zero, sorted by full name.
     /// </summary>
-    public List<PassengerDTO> GetPassengersWithZeroBaggageOnFlight(string flightCode)
+    public async Task<List<PassengerDTO>> GetPassengersWithZeroBaggageOnFlight(string flightCode)
     {
-        var flights = flightRepository.Read();
-        var tickets = ticketRepository.Read();
-        var passengers = passengerRepository.Read();
+        var flights = await flightRepository.Read();
+        var tickets = await ticketRepository.Read();
+        var passengers = await passengerRepository.Read();
 
         var flight = flights.FirstOrDefault(f => f.Code == flightCode);
         if (flight == null)
-            return new List<PassengerDTO>();
+            return [];
 
         var passengerIdsWithZeroBaggage = tickets
             .Where(t => t.FlightId == flight.Id && t.BaggageWeight == 0)
@@ -80,12 +81,13 @@ public class AnalyticService(
         return result;
     }
 
+
     /// <summary>
     /// Display summary information about all flights of aircraft of the selected model during a specified period of time.
     /// </summary>
-    public List<FlightDTO> GetFlightsOfModelInPeriod(int modelId, DateTime? fromDate, DateTime? toDate)
+    public async Task<List<FlightDTO>> GetFlightsOfModelInPeriod(int modelId, DateTime? fromDate, DateTime? toDate)
     {
-        var flights = flightRepository.Read();
+        var flights = await flightRepository.Read();
 
         var result = flights
             .Where(f => f.AircraftModelId == modelId)
@@ -100,9 +102,9 @@ public class AnalyticService(
     /// <summary>
     /// Display information about all flights departing from a specified departure point to a specified arrival point.
     /// </summary>
-    public List<FlightByRouteDTO> GetFlightsByRoute(string departureCity, string arrivalCity)
+    public async Task<List<FlightByRouteDTO>> GetFlightsByRoute(string departureCity, string arrivalCity)
     {
-        var flights = flightRepository.Read();
+        var flights = await flightRepository.Read();
 
         var result = flights
             .Where(f =>

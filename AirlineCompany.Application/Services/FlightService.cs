@@ -1,6 +1,7 @@
 ﻿using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.DTO;
+using AirlineCompany.DTO.Services;
 
 namespace AirlineCompany.Application.Services;
 
@@ -9,12 +10,12 @@ namespace AirlineCompany.Application.Services;
 /// </summary>
 public class FlightService(
     IRepository<Flight> flightRepository,
-    IRepository<AircraftModel> modelRepository)
+    IRepository<AircraftModel> modelRepository) : IFlightService
 {
     /// <summary>
     /// Converts create DTO to entity
     /// </summary>
-    private Flight MapDto(FlightCreateDTO dto, AircraftModel model) =>
+    private static Flight MapDto(FlightCreateDTO dto, AircraftModel model) =>
         new()
         {
             Id = 0,
@@ -25,7 +26,6 @@ public class FlightService(
             ArrivalDate = dto.ArrivalDate,
             Duration = dto.Duration,
             AircraftModelId = model.Id,
-            //AircraftModel = model
         };
 
     /// <summary>
@@ -58,56 +58,53 @@ public class FlightService(
     /// <summary>
     /// Create a new flight record
     /// </summary>
-    public int CreateFlight(FlightCreateDTO dto)
+    public async Task<int> CreateFlight(FlightCreateDTO dto)
     {
-        var model = modelRepository.Read(dto.AircraftModelId);
-        if (model == null)
-            throw new ArgumentException("Invalid AircraftModel ID");
+        var model = await modelRepository.Read(dto.AircraftModelId)
+            ?? throw new ArgumentException("Invalid AircraftModel ID");
 
-        return flightRepository.Create(MapDto(dto, model));
+        return await flightRepository.Create(MapDto(dto, model));
     }
 
     /// <summary>
     /// Get all flights
     /// </summary>
-    public List<FlightDTO> GetFlights() =>
-        flightRepository.Read().Select(MapReadDto).ToList();
+    public async Task<List<FlightDTO>> GetFlights() =>
+        [.. (await flightRepository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get flights by aircraft model ID
     /// </summary>
-    public List<FlightDTO> GetFlightsByModelId(int modelId) =>
-        flightRepository.Read()
+    public async Task<List<FlightDTO>> GetFlightsByModelId(int modelId) =>
+       [.. (await flightRepository.Read())
             .Where(f => f.AircraftModelId == modelId)
-            .Select(MapReadDto)
-            .ToList();
+            .Select(MapReadDto)];
 
     /// <summary>
     /// Get flight by ID
     /// </summary>
-    public FlightDTO? GetFlight(int id)
+    public async Task<FlightDTO?> GetFlight(int id)
     {
-        var entity = flightRepository.Read(id);
+        var entity = await flightRepository.Read(id);
         return entity == null ? null : MapReadDto(entity);
     }
 
     /// <summary>
     /// Update flight by ID
     /// </summary>
-    public FlightDTO? UpdateFlight(int id, FlightCreateDTO dto)
+    public async Task<FlightDTO?> UpdateFlight(int id, FlightCreateDTO dto)
     {
-        var model = modelRepository.Read(dto.AircraftModelId);
-        if (model == null)
-            throw new ArgumentException("Invalid AircraftModel ID");
+        var model = await modelRepository.Read(dto.AircraftModelId)
+            ?? throw new ArgumentException("Invalid AircraftModel ID");
 
         var entity = MapDto(dto, model);
-        var updated = flightRepository.Update(id, entity);
+        var updated = await flightRepository.Update(id, entity);
         return updated == null ? null : MapReadDto(updated);
     }
 
     /// <summary>
     /// Delete flight by ID
     /// </summary>
-    public bool DeleteFlight(int id) =>
-        flightRepository.Delete(id);
+    public async Task<bool> DeleteFlight(int id) =>
+        await flightRepository.Delete(id);
 }

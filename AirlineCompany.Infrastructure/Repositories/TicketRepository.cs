@@ -13,43 +13,43 @@ public class TicketRepository(AppDbContext dbContext) : IRepository<Ticket>
     /// <summary>
     /// Create a new Ticket record
     /// </summary>
-    public int Create(Ticket entity)
+    public async Task<int> Create(Ticket entity)
     {
-        dbContext.Tickets.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.Tickets.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all Ticket records
     /// </summary>
-    public List<Ticket> Read() =>
-        dbContext.Tickets
+    public async Task<List<Ticket>> Read() =>
+        await dbContext.Tickets
             .Include(t => t.Flight)
                 .ThenInclude(f => f!.AircraftModel)
                     .ThenInclude(m => m!.AircraftFamily)
             .Include(t => t.Passenger)
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
 
     /// <summary>
     /// Return Ticket by ID
     /// </summary>
-    public Ticket? Read(int id) =>
-        dbContext.Tickets
-            .Include(t => t.Flight)
-                .ThenInclude(f => f!.AircraftModel)
-                    .ThenInclude(m => m!.AircraftFamily)
-            .Include(t => t.Passenger)
-            .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+    public async Task<Ticket?> Read(int id) =>
+       await dbContext.Tickets
+           .Include(t => t.Flight)
+               .ThenInclude(f => f!.AircraftModel)
+                   .ThenInclude(m => m!.AircraftFamily)
+           .Include(t => t.Passenger)
+           .AsNoTracking()
+           .FirstOrDefaultAsync(x => x.Id == id);
 
     /// <summary>
     /// Update Ticket by ID
     /// </summary>
-    public Ticket? Update(int id, Ticket entity)
+    public async Task<Ticket?> Update(int id, Ticket entity)
     {
-        var existingEntity = dbContext.Tickets.Find(id);
+        var existingEntity = await dbContext.Tickets.FindAsync(id);
         if (existingEntity == null) return null;
 
         existingEntity.SeatNumber = entity.SeatNumber;
@@ -58,28 +58,28 @@ public class TicketRepository(AppDbContext dbContext) : IRepository<Ticket>
         existingEntity.FlightId = entity.FlightId;
         existingEntity.PassengerId = entity.PassengerId;
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
-        dbContext.Entry(existingEntity)
+        await dbContext.Entry(existingEntity)
             .Reference(t => t.Flight)
-            .Load();
+            .LoadAsync();
 
         if (existingEntity.Flight != null)
         {
-            dbContext.Entry(existingEntity.Flight)
+            await dbContext.Entry(existingEntity.Flight)
                 .Reference(f => f.AircraftModel)
-                .Load();
+                .LoadAsync();
 
             if (existingEntity.Flight.AircraftModel != null)
             {
-                dbContext.Entry(existingEntity.Flight.AircraftModel)
+                await dbContext.Entry(existingEntity.Flight.AircraftModel)
                     .Reference(m => m.AircraftFamily)
-                    .Load();
+                    .LoadAsync();
             }
         }
-        dbContext.Entry(existingEntity)
+        await dbContext.Entry(existingEntity)
             .Reference(t => t.Passenger)
-            .Load();
+            .LoadAsync();
 
         return existingEntity;
     }
@@ -87,14 +87,14 @@ public class TicketRepository(AppDbContext dbContext) : IRepository<Ticket>
     /// <summary>
     /// Delete Ticket by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> Delete(int id)
     {
-        var existingEntity = dbContext.Tickets.Find(id);
+        var existingEntity = await dbContext.Tickets.FindAsync(id);
 
         if (existingEntity == null) return false;
 
         dbContext.Tickets.Remove(existingEntity);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return true;
     }

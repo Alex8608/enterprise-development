@@ -11,20 +11,20 @@ public interface IRepository<TEntity>
     /// </summary>
     /// <param name="entity">Entity to create</param>
     /// <returns>Created entity ID</returns>
-    public int Create(TEntity entity);
+    public Task<int> Create(TEntity entity);
 
     /// <summary>
     /// Return all entities from repository
     /// </summary>
     /// <returns>List of all entities</returns>
-    public List<TEntity> Read();
+    public Task<List<TEntity>> Read();
 
     /// <summary>
     /// Return entity by ID
     /// </summary>
     /// <param name="id">Entity ID</param>
     /// <returns>Entity or null if not found</returns>
-    public TEntity? Read(int id);
+    public Task<TEntity?> Read(int id);
 
     /// <summary>
     /// Update entity by ID
@@ -32,12 +32,12 @@ public interface IRepository<TEntity>
     /// <param name="id">Entity ID</param>
     /// <param name="entity">Updated entity data</param>
     /// <returns>Updated entity or null if not found</returns>
-    public TEntity? Update(int id, TEntity entity);
+    public Task<TEntity?> Update(int id, TEntity entity);
 
     /// <summary>
     /// Delete entity by ID
     /// </summary>
     /// <param name="id">Entity ID</param>
     /// <returns>True if deleted, false if not found</returns>
-    public bool Delete(int id);
+    public Task<bool> Delete(int id);
 }
