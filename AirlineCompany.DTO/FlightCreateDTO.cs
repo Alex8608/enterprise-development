@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AirlineCompany.DTO;
+namespace AirlineCompany.Dto;
 
 /// <summary>
 /// DTO for creating a flight

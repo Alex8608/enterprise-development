@@ -1,7 +1,7 @@
 using AirlineCompany.Application.Services;
 using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
-using AirlineCompany.DTO.Services;
+using AirlineCompany.Dto.Services;
 using AirlineCompany.Infrastructure.Data;
 using AirlineCompany.Infrastructure.Repositories;
 using AirlineCompany.ServiceDefaults;

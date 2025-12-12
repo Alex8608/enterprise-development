@@ -4,7 +4,7 @@ var db = builder.AddSqlServer("sqlserver")
     .WithDataVolume()
     .AddDatabase("AirlineCompanyDb");
 
-builder.AddProject<Projects.AirlineCompany_API>("airline-api")
+builder.AddProject<Projects.AirlineCompany_Api>("airline-api")
     .WithReference(db)
     .WithExternalHttpEndpoints();
 

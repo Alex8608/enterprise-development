@@ -1,5 +1,5 @@
-﻿using AirlineCompany.DTO;
-using AirlineCompany.DTO.Services;
+﻿using AirlineCompany.Dto;
+using AirlineCompany.Dto.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AirlineCompany.Api.Controllers;

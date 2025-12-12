@@ -1,4 +1,4 @@
-﻿namespace AirlineCompany.DTO;
+﻿namespace AirlineCompany.Dto;
 
 /// <summary>
 /// DTO for reading a flight

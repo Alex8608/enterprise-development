@@ -8,7 +8,7 @@
 
   <ItemGroup>
 	<ProjectReference Include="..\AirlineCompany.Core\AirlineCompany.Core.csproj" />
-  	<ProjectReference Include="..\AirlineCompany.DTO\AirlineCompany.DTO.csproj" />
+  	<ProjectReference Include="..\AirlineCompany.Dto\AirlineCompany.Dto.csproj" />
   </ItemGroup>
 	
 </Project>

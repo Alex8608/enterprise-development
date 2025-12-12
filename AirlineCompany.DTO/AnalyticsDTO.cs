@@ -1,4 +1,4 @@
-﻿namespace AirlineCompany.DTO;
+﻿namespace AirlineCompany.Dto;
 
 /// <summary>
 /// DTOs for analytic endpoints

@@ -1,4 +1,4 @@
-﻿namespace AirlineCompany.DTO.Services;
+﻿namespace AirlineCompany.Dto.Services;
 
 /// <summary>
 /// Service interface for analytical operations and reports
