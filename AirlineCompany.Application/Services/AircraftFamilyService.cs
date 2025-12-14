@@ -1,4 +1,5 @@
-﻿using AirlineCompany.Core.Entities;
+﻿using AirlineCompany.Application.Helpers;
+using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.Dto;
 using AirlineCompany.Dto.Services;
@@ -11,33 +12,16 @@ namespace AirlineCompany.Application.Services;
 public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAircraftFamilyService
 {
     /// <summary>
-    /// Converts create DTO to entity
-    /// </summary>
-    private static AircraftFamily MapDto(AircraftFamilyCreateDto dto) =>
-        new()
-        {
-            Id = 0,
-            Name = dto.Name,
-            Manufacturer = dto.Manufacturer
-        };
-
-    /// <summary>
-    /// Converts entity to read DTO
-    /// </summary>
-    private static AircraftFamilyDto MapReadDto(AircraftFamily entity) =>
-        new(entity.Id, entity.Name, entity.Manufacturer);
-
-    /// <summary>
     /// Create a new aircraft family record
     /// </summary>
     public async Task<int> CreateAircraftFamily(AircraftFamilyCreateDto dto) =>
-        await repository.Create(MapDto(dto));
+        await repository.Create(MapperHelper.ToEntity(dto));
 
     /// <summary>
     /// Get all aircraft families
     /// </summary>
     public async Task<List<AircraftFamilyDto>> GetAircraftFamilies() =>
-        [.. (await repository.Read()).Select(MapReadDto)];
+        [.. (await repository.Read()).Select(MapperHelper.ToDto)];
 
     /// <summary>
     /// Get aircraft family by ID
@@ -45,7 +29,7 @@ public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAi
     public async Task<AircraftFamilyDto?> GetAircraftFamily(int id)
     {
         var entity = await repository.Read(id);
-        return entity == null ? null : MapReadDto(entity);
+        return entity == null ? null : MapperHelper.ToDto(entity);
     }
 
     /// <summary>
@@ -53,8 +37,8 @@ public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAi
     /// </summary>
     public async Task<AircraftFamilyDto?> UpdateAircraftFamily(int id, AircraftFamilyCreateDto dto)
     {
-        var entity = await repository.Update(id, MapDto(dto));
-        return entity == null ? null : MapReadDto(entity);
+        var entity = await repository.Update(id, MapperHelper.ToEntity(dto));
+        return entity == null ? null : MapperHelper.ToDto(entity);
     }
 
     /// <summary>

@@ -1,4 +1,5 @@
-﻿using AirlineCompany.Core.Entities;
+﻿using AirlineCompany.Application.Helpers;
+using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.Dto;
 using AirlineCompany.Dto.Services;
@@ -13,39 +14,6 @@ public class AircraftModelService(
     IRepository<AircraftFamily> familyRepository) : IAircraftModelService
 {
     /// <summary>
-    /// Converts create DTO to entity
-    /// </summary>
-    private static AircraftModel MapDto(AircraftModelCreateDto dto, AircraftFamily family) =>
-        new()
-        {
-            Id = 0,
-            Name = dto.Name,
-            Range = dto.Range,
-            PassengerCapacity = dto.PassengerCapacity,
-            CargoCapacity = dto.CargoCapacity,
-            AircraftFamilyId = family.Id,
-        };
-
-    /// <summary>
-    /// Converts entity to read DTO
-    /// </summary>
-    private static AircraftModelDto MapReadDto(AircraftModel entity)
-    {
-        var familyDto = new AircraftFamilyDto(
-            entity.AircraftFamily!.Id,
-            entity.AircraftFamily.Name,
-            entity.AircraftFamily.Manufacturer);
-
-        return new AircraftModelDto(
-            entity.Id,
-            entity.Name,
-            entity.Range,
-            entity.PassengerCapacity,
-            entity.CargoCapacity,
-            familyDto);
-    }
-
-    /// <summary>
     /// Create a new aircraft model record
     /// </summary>
     public async Task<int> CreateAircraftModel(AircraftModelCreateDto dto)
@@ -53,14 +21,16 @@ public class AircraftModelService(
         var family = await familyRepository.Read(dto.AircraftFamilyId)
             ?? throw new ArgumentException("Invalid AircraftFamily ID");
 
-        return await modelRepository.Create(MapDto(dto, family));
+        var entity = MapperHelper.ToEntity(dto);
+        entity.AircraftFamily = family;
+        return await modelRepository.Create(entity);
     }
 
     /// <summary>
     /// Get all aircraft models
     /// </summary>
     public async Task<List<AircraftModelDto>> GetAircraftModels() =>
-       [.. (await modelRepository.Read()).Select(MapReadDto)];
+       [.. (await modelRepository.Read()).Select(MapperHelper.ToDto)];
 
     /// <summary>
     /// Get aircraft models by family ID
@@ -68,7 +38,7 @@ public class AircraftModelService(
     public async Task<List<AircraftModelDto>> GetModelsByFamilyId(int familyId) =>
          [.. (await modelRepository.Read())
             .Where(m => m.AircraftFamilyId == familyId)
-            .Select(MapReadDto)];
+            .Select(MapperHelper.ToDto)];
 
     /// <summary>
     /// Get aircraft model by ID
@@ -76,7 +46,7 @@ public class AircraftModelService(
     public async Task<AircraftModelDto?> GetAircraftModel(int id)
     {
         var entity = await modelRepository.Read(id);
-        return entity == null ? null : MapReadDto(entity);
+        return entity == null ? null : MapperHelper.ToDto(entity);
     }
 
     /// <summary>
@@ -87,9 +57,10 @@ public class AircraftModelService(
         var family = await familyRepository.Read(dto.AircraftFamilyId)
             ?? throw new ArgumentException("Invalid AircraftFamily ID");
 
-        var entity = MapDto(dto, family);
+        var entity = MapperHelper.ToEntity(dto);
+        entity.AircraftFamily = family;
         var updated = await modelRepository.Update(id, entity);
-        return updated == null ? null : MapReadDto(updated);
+        return updated == null ? null : MapperHelper.ToDto(updated);
     }
 
     /// <summary>

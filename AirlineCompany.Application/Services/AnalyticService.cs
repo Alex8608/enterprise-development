@@ -1,4 +1,5 @@
-﻿using AirlineCompany.Core.Entities;
+﻿using AirlineCompany.Application.Helpers;
+using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.Dto;
 using AirlineCompany.Dto.Services;
@@ -25,7 +26,7 @@ public class AnalyticService(
             from f in flights
             let passengerCount = tickets.Count(t => t.FlightId == f.Id)
             orderby passengerCount descending
-            select new FlightPassengerCountDto(f.Code, passengerCount)
+            select MapperHelper.ToFlightPassengerCountDto(f, passengerCount)
         )
         .Take(5)
         .ToList();
@@ -47,7 +48,7 @@ public class AnalyticService(
 
         var result = flights
             .Where(f => f.Duration == minDuration)
-            .Select(f => new FlightDurationDto(f.Code, f.Duration))
+            .Select(MapperHelper.ToFlightDurationDto)
             .ToList();
 
         return result;
@@ -75,12 +76,11 @@ public class AnalyticService(
         var result = passengers
             .Where(p => passengerIdsWithZeroBaggage.Contains(p.Id))
             .OrderBy(p => p.FullName)
-            .Select(p => new PassengerDto(p.Id, p.PassportNumber, p.FullName, p.DateOfBirth))
+            .Select(MapperHelper.ToDto)
             .ToList();
 
         return result;
     }
-
 
     /// <summary>
     /// Display summary information about all flights of aircraft of the selected model during a specified period of time.
@@ -93,7 +93,7 @@ public class AnalyticService(
             .Where(f => f.AircraftModelId == modelId)
             .Where(f => !fromDate.HasValue || f.DepartureDate >= fromDate.Value || f.ArrivalDate >= fromDate.Value)
             .Where(f => !toDate.HasValue || f.DepartureDate <= toDate.Value || f.ArrivalDate <= toDate.Value)
-            .Select(f => MapToFlightDTO(f))
+            .Select(MapperHelper.ToDto)
             .ToList();
 
         return result;
@@ -110,47 +110,9 @@ public class AnalyticService(
             .Where(f =>
                 string.Equals(f.DepartureCity, departureCity, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(f.ArrivalCity, arrivalCity, StringComparison.OrdinalIgnoreCase))
-            .Select(f => new FlightByRouteDto(
-                f.Code,
-                f.DepartureCity,
-                f.ArrivalCity,
-                f.DepartureDate,
-                f.Duration))
+            .Select(MapperHelper.ToFlightByRouteDto)
             .ToList();
 
         return result;
-    }
-
-    /// <summary>
-    /// Helper method to convert Flight entity to FlightDTO
-    /// </summary>
-    private static FlightDto MapToFlightDTO(Flight entity)
-    {
-        var model = entity.AircraftModel;
-        var family = model?.AircraftFamily;
-
-        var familyDto = family != null
-            ? new AircraftFamilyDto(family.Id, family.Name, family.Manufacturer)
-            : new AircraftFamilyDto(0, string.Empty, string.Empty);
-
-        var modelDto = model != null
-            ? new AircraftModelDto(
-                model.Id,
-                model.Name,
-                model.Range,
-                model.PassengerCapacity,
-                model.CargoCapacity,
-                familyDto)
-            : new AircraftModelDto(0, string.Empty, 0, 0, 0, familyDto);
-
-        return new FlightDto(
-            entity.Id,
-            entity.Code,
-            entity.DepartureCity,
-            entity.ArrivalCity,
-            entity.DepartureDate,
-            entity.ArrivalDate,
-            entity.Duration,
-            modelDto);
     }
 }

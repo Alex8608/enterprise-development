@@ -1,4 +1,5 @@
-﻿using AirlineCompany.Core.Entities;
+﻿using AirlineCompany.Application.Helpers;
+using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.Dto;
 using AirlineCompany.Dto.Services;
@@ -14,59 +15,6 @@ public class TicketService(
     IRepository<Passenger> passengerRepository) : ITicketService
 {
     /// <summary>
-    /// Converts create DTO to entity
-    /// </summary>
-    private static Ticket MapDto(TicketCreateDto dto, Flight flight, Passenger passenger) =>
-        new()
-        {
-            Id = 0,
-            SeatNumber = dto.SeatNumber,
-            HasHandLuggage = dto.HasHandLuggage,
-            BaggageWeight = dto.BaggageWeight,
-            FlightId = flight.Id,
-            PassengerId = passenger.Id,
-        };
-
-    /// <summary>
-    /// Converts entity to read DTO
-    /// </summary>
-    private static TicketDto MapReadDto(Ticket entity)
-    {
-        var flightDto = new FlightDto(
-            entity.Flight!.Id,
-            entity.Flight.Code,
-            entity.Flight.DepartureCity,
-            entity.Flight.ArrivalCity,
-            entity.Flight.DepartureDate,
-            entity.Flight.ArrivalDate,
-            entity.Flight.Duration,
-            new AircraftModelDto(
-                entity.Flight.AircraftModel!.Id,
-                entity.Flight.AircraftModel.Name,
-                entity.Flight.AircraftModel.Range,
-                entity.Flight.AircraftModel.PassengerCapacity,
-                entity.Flight.AircraftModel.CargoCapacity,
-                new AircraftFamilyDto(
-                    entity.Flight.AircraftModel.AircraftFamily!.Id,
-                    entity.Flight.AircraftModel.AircraftFamily.Name,
-                    entity.Flight.AircraftModel.AircraftFamily.Manufacturer)));
-
-        var passengerDto = new PassengerDto(
-            entity.Passenger!.Id,
-            entity.Passenger.PassportNumber,
-            entity.Passenger.FullName,
-            entity.Passenger.DateOfBirth);
-
-        return new TicketDto(
-            entity.Id,
-            flightDto,
-            passengerDto,
-            entity.SeatNumber,
-            entity.HasHandLuggage,
-            entity.BaggageWeight);
-    }
-
-    /// <summary>
     /// Create a new ticket record
     /// </summary>
     public async Task<int> CreateTicket(TicketCreateDto dto)
@@ -81,14 +29,17 @@ public class TicketService(
         if (existingTicket != null)
             throw new ArgumentException($"Seat {dto.SeatNumber} is already taken on this flight");
 
-        return await ticketRepository.Create(MapDto(dto, flight, passenger));
+        var entity = MapperHelper.ToEntity(dto);
+        entity.Flight = flight;
+        entity.Passenger = passenger;
+        return await ticketRepository.Create(entity);
     }
 
     /// <summary>
     /// Get all tickets
     /// </summary>
     public async Task<List<TicketDto>> GetTickets() =>
-         [.. (await ticketRepository.Read()).Select(MapReadDto)];
+         [.. (await ticketRepository.Read()).Select(MapperHelper.ToDto)];
 
     /// <summary>
     /// Get tickets by flight ID
@@ -96,7 +47,7 @@ public class TicketService(
     public async Task<List<TicketDto>> GetTicketsByFlightId(int flightId) =>
         [.. (await ticketRepository.Read())
             .Where(t => t.FlightId == flightId)
-            .Select(MapReadDto)];
+            .Select(MapperHelper.ToDto)];
 
     /// <summary>
     /// Get tickets by passenger ID
@@ -104,7 +55,7 @@ public class TicketService(
     public async Task<List<TicketDto>> GetTicketsByPassengerId(int passengerId) =>
        [.. (await ticketRepository.Read())
             .Where(t => t.PassengerId == passengerId)
-            .Select(MapReadDto)];
+            .Select(MapperHelper.ToDto)];
 
     /// <summary>
     /// Get ticket by ID
@@ -112,7 +63,7 @@ public class TicketService(
     public async Task<TicketDto?> GetTicket(int id)
     {
         var entity = await ticketRepository.Read(id);
-        return entity == null ? null : MapReadDto(entity);
+        return entity == null ? null : MapperHelper.ToDto(entity);
     }
 
     /// <summary>
@@ -120,9 +71,9 @@ public class TicketService(
     /// </summary>
     public async Task<TicketDto?> UpdateTicket(int id, TicketCreateDto dto)
     {
-        var flight = await flightRepository.Read(dto.FlightId) 
+        var flight = await flightRepository.Read(dto.FlightId)
             ?? throw new ArgumentException("Invalid Flight ID");
-        var passenger = await passengerRepository.Read(dto.PassengerId) 
+        var passenger = await passengerRepository.Read(dto.PassengerId)
             ?? throw new ArgumentException("Invalid Passenger ID");
         var existingTicket = (await ticketRepository.Read())
             .FirstOrDefault(t => t.FlightId == dto.FlightId &&
@@ -132,9 +83,11 @@ public class TicketService(
         if (existingTicket != null)
             throw new ArgumentException($"Seat {dto.SeatNumber} is already taken on this flight");
 
-        var entity = MapDto(dto, flight, passenger);
+        var entity = MapperHelper.ToEntity(dto);
+        entity.Flight = flight;
+        entity.Passenger = passenger;
         var updated = await ticketRepository.Update(id, entity);
-        return updated == null ? null : MapReadDto(updated);
+        return updated == null ? null : MapperHelper.ToDto(updated);
     }
 
     /// <summary>
