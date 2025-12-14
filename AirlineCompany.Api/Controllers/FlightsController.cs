@@ -18,9 +18,9 @@ public class FlightsController(
     /// Returns a list of all flights
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(typeof(List<FlightDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<FlightDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<FlightDTO>>> GetAll()
+    public async Task<ActionResult<List<FlightDto>>> GetAll()
     {
         try
         {
@@ -38,10 +38,10 @@ public class FlightsController(
     /// Returns information about flight by id
     /// </summary>
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(FlightDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FlightDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<FlightDTO>> Get(int id)
+    public async Task<ActionResult<FlightDto>> Get(int id)
     {
         try
         {
@@ -64,10 +64,10 @@ public class FlightsController(
     /// Returns all tickets for this flight
     /// </summary>
     [HttpGet("{id:int}/tickets")]
-    [ProducesResponseType(typeof(List<TicketDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<TicketDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<TicketDTO>>> GetTickets(int id)
+    public async Task<ActionResult<List<TicketDto>>> GetTickets(int id)
     {
         try
         {
@@ -92,10 +92,10 @@ public class FlightsController(
     /// Create a new flight
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(typeof(FlightDTO), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(FlightDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<FlightDTO>> Create([FromBody] FlightCreateDTO dto)
+    public async Task<ActionResult<FlightDto>> Create([FromBody] FlightCreateDto dto)
     {
         try
         {
@@ -126,11 +126,11 @@ public class FlightsController(
     /// Update flight by ID
     /// </summary>
     [HttpPut("{id:int}")]
-    [ProducesResponseType(typeof(FlightDTO), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(FlightDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<FlightDTO>> Update(int id, [FromBody] FlightCreateDTO dto)
+    public async Task<ActionResult<FlightDto>> Update(int id, [FromBody] FlightCreateDto dto)
     {
         try
         {

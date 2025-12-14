@@ -10,27 +10,27 @@ public interface IAircraftModelService
     /// </summary>
     /// <param name="dto">Data for creating aircraft model</param>
     /// <returns>ID of the created aircraft model</returns>
-    public Task<int> CreateAircraftModel(AircraftModelCreateDTO dto);
+    public Task<int> CreateAircraftModel(AircraftModelCreateDto dto);
 
     /// <summary>
     /// Gets all aircraft models
     /// </summary>
     /// <returns>List of all aircraft models</returns>
-    public Task<List<AircraftModelDTO>> GetAircraftModels();
+    public Task<List<AircraftModelDto>> GetAircraftModels();
 
     /// <summary>
     /// Gets aircraft models by family ID
     /// </summary>
     /// <param name="familyId">Aircraft family ID</param>
     /// <returns>List of aircraft models belonging to the specified family</returns>
-    public Task<List<AircraftModelDTO>> GetModelsByFamilyId(int familyId);
+    public Task<List<AircraftModelDto>> GetModelsByFamilyId(int familyId);
 
     /// <summary>
     /// Gets aircraft model by ID
     /// </summary>
     /// <param name="id">Aircraft model ID</param>
     /// <returns>Aircraft model or null if not found</returns>
-    public Task<AircraftModelDTO?> GetAircraftModel(int id);
+    public Task<AircraftModelDto?> GetAircraftModel(int id);
 
     /// <summary>
     /// Updates an existing aircraft model
@@ -38,7 +38,7 @@ public interface IAircraftModelService
     /// <param name="id">Aircraft model ID</param>
     /// <param name="dto">Updated aircraft model data</param>
     /// <returns>Updated aircraft model or null if not found</returns>
-    public Task<AircraftModelDTO?> UpdateAircraftModel(int id, AircraftModelCreateDTO dto);
+    public Task<AircraftModelDto?> UpdateAircraftModel(int id, AircraftModelCreateDto dto);
 
     /// <summary>
     /// Deletes an aircraft model by ID

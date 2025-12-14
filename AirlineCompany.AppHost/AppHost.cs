@@ -6,6 +6,7 @@ var db = builder.AddSqlServer("sqlserver")
 
 builder.AddProject<Projects.AirlineCompany_Api>("airline-api")
     .WithReference(db)
+    .WaitFor(db)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();

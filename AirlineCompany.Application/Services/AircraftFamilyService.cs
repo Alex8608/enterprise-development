@@ -13,7 +13,7 @@ public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAi
     /// <summary>
     /// Converts create DTO to entity
     /// </summary>
-    private static AircraftFamily MapDto(AircraftFamilyCreateDTO dto) =>
+    private static AircraftFamily MapDto(AircraftFamilyCreateDto dto) =>
         new()
         {
             Id = 0,
@@ -24,25 +24,25 @@ public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAi
     /// <summary>
     /// Converts entity to read DTO
     /// </summary>
-    private static AircraftFamilyDTO MapReadDto(AircraftFamily entity) =>
+    private static AircraftFamilyDto MapReadDto(AircraftFamily entity) =>
         new(entity.Id, entity.Name, entity.Manufacturer);
 
     /// <summary>
     /// Create a new aircraft family record
     /// </summary>
-    public async Task<int> CreateAircraftFamily(AircraftFamilyCreateDTO dto) =>
+    public async Task<int> CreateAircraftFamily(AircraftFamilyCreateDto dto) =>
         await repository.Create(MapDto(dto));
 
     /// <summary>
     /// Get all aircraft families
     /// </summary>
-    public async Task<List<AircraftFamilyDTO>> GetAircraftFamilies() =>
+    public async Task<List<AircraftFamilyDto>> GetAircraftFamilies() =>
         [.. (await repository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get aircraft family by ID
     /// </summary>
-    public async Task<AircraftFamilyDTO?> GetAircraftFamily(int id)
+    public async Task<AircraftFamilyDto?> GetAircraftFamily(int id)
     {
         var entity = await repository.Read(id);
         return entity == null ? null : MapReadDto(entity);
@@ -51,7 +51,7 @@ public class AircraftFamilyService(IRepository<AircraftFamily> repository) : IAi
     /// <summary>
     /// Update aircraft family by ID
     /// </summary>
-    public async Task<AircraftFamilyDTO?> UpdateAircraftFamily(int id, AircraftFamilyCreateDTO dto)
+    public async Task<AircraftFamilyDto?> UpdateAircraftFamily(int id, AircraftFamilyCreateDto dto)
     {
         var entity = await repository.Update(id, MapDto(dto));
         return entity == null ? null : MapReadDto(entity);

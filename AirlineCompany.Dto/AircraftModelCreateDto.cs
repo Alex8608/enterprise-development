@@ -5,7 +5,7 @@ namespace AirlineCompany.Dto;
 /// <summary>
 /// DTO for creating an aircraft model
 /// </summary>
-public record AircraftModelCreateDTO
+public record AircraftModelCreateDto
 {
     /// <summary>
     /// Model name
@@ -42,7 +42,7 @@ public record AircraftModelCreateDTO
     /// <summary>
     /// Create DTO constructor
     /// </summary>
-    public AircraftModelCreateDTO(
+    public AircraftModelCreateDto(
         string name,
         int range,
         int passengerCapacity,

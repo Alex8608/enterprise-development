@@ -3,7 +3,7 @@
 /// <summary>
 /// DTO for reading an aircraft model
 /// </summary>
-public record AircraftModelDTO
+public record AircraftModelDto
 {
     /// <summary>
     /// Unique ID for the primary key in the database
@@ -33,18 +33,18 @@ public record AircraftModelDTO
     /// <summary>
     /// Associated aircraft family
     /// </summary>
-    public AircraftFamilyDTO AircraftFamily { get; init; }
+    public AircraftFamilyDto AircraftFamily { get; init; }
 
     /// <summary>
     /// DTO for read constructor
     /// </summary>
-    public AircraftModelDTO(
+    public AircraftModelDto(
         int id,
         string name,
         int range,
         int passengerCapacity,
         double cargoCapacity,
-        AircraftFamilyDTO aircraftFamily)
+        AircraftFamilyDto aircraftFamily)
     {
         Id = id;
         Name = name;

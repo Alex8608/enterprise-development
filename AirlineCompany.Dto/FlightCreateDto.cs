@@ -5,7 +5,7 @@ namespace AirlineCompany.Dto;
 /// <summary>
 /// DTO for creating a flight
 /// </summary>
-public record FlightCreateDTO
+public record FlightCreateDto
 {
     /// <summary>
     /// Flight code
@@ -41,7 +41,7 @@ public record FlightCreateDTO
     /// </summary>
     [Required(ErrorMessage = "Arrival date is required")]
     [DataType(DataType.DateTime)]
-    [CustomValidation(typeof(FlightCreateDTO), nameof(ValidateArrivalDate))]
+    [CustomValidation(typeof(FlightCreateDto), nameof(ValidateArrivalDate))]
     public DateTime ArrivalDate { get; init; }
 
     /// <summary>
@@ -61,7 +61,7 @@ public record FlightCreateDTO
     /// <summary>
     /// Create DTO constructor
     /// </summary>
-    public FlightCreateDTO(
+    public FlightCreateDto(
         string code,
         string departureCity,
         string arrivalCity,
@@ -84,7 +84,7 @@ public record FlightCreateDTO
     /// </summary>
     private static ValidationResult? ValidateArrivalDate(DateTime arrivalDate, ValidationContext context)
     {
-        var instance = (FlightCreateDTO)context.ObjectInstance;
+        var instance = (FlightCreateDto)context.ObjectInstance;
         return arrivalDate > instance.DepartureDate
             ? ValidationResult.Success
             : new ValidationResult("Arrival date must be after departure date");

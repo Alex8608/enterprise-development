@@ -5,7 +5,7 @@ namespace AirlineCompany.Dto;
 /// <summary>
 /// DTO for creating a ticket
 /// </summary>
-public record TicketCreateDTO
+public record TicketCreateDto
 {
     /// <summary>
     /// Seat number
@@ -45,7 +45,7 @@ public record TicketCreateDTO
     /// <summary>
     /// Create DTO constructor
     /// </summary>
-    public TicketCreateDTO(
+    public TicketCreateDto(
         string seatNumber,
         bool hasHandLuggage,
         double baggageWeight,

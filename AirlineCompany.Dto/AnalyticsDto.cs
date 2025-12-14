@@ -3,27 +3,27 @@
 /// <summary>
 /// DTOs for analytic endpoints
 /// </summary>
-public static class AnalyticsDTO { }
+public static class AnalyticsDto { }
 
 /// <summary>
 /// Flight with passenger count
 /// </summary>
-public record FlightPassengerCountDTO(string FlightCode, int PassengerCount);
+public record FlightPassengerCountDto(string FlightCode, int PassengerCount);
 
 /// <summary>
 /// Flight with duration
 /// </summary>
-public record FlightDurationDTO(string FlightCode, TimeSpan Duration);
+public record FlightDurationDto(string FlightCode, TimeSpan Duration);
 
 /// <summary>
 /// Passenger with zero baggage
 /// </summary>
-public record PassengerZeroBaggageDTO(int PassengerId, string FullName, string PassportNumber);
+public record PassengerZeroBaggageDto(int PassengerId, string FullName, string PassportNumber);
 
 /// <summary>
 /// Flight statistics for model
 /// </summary>
-public record FlightStatisticsDTO(
+public record FlightStatisticsDto(
     int TotalFlights,
     int TotalPassengers,
     double AverageDurationHours,
@@ -32,7 +32,7 @@ public record FlightStatisticsDTO(
 /// <summary>
 /// Flight by route
 /// </summary>
-public record FlightByRouteDTO(
+public record FlightByRouteDto(
     string FlightCode,
     string DepartureCity,
     string ArrivalCity,

@@ -10,27 +10,27 @@ public interface IFlightService
     /// </summary>
     /// <param name="dto">Data for creating flight</param>
     /// <returns>ID of the created flight</returns>
-    public Task<int> CreateFlight(FlightCreateDTO dto);
+    public Task<int> CreateFlight(FlightCreateDto dto);
 
     /// <summary>
     /// Gets all flights
     /// </summary>
     /// <returns>List of all flights</returns>
-    public Task<List<FlightDTO>> GetFlights();
+    public Task<List<FlightDto>> GetFlights();
 
     /// <summary>
     /// Gets flights by aircraft model ID
     /// </summary>
     /// <param name="modelId">Aircraft model ID</param>
     /// <returns>List of flights using the specified aircraft model</returns>
-    public Task<List<FlightDTO>> GetFlightsByModelId(int modelId);
+    public Task<List<FlightDto>> GetFlightsByModelId(int modelId);
 
     /// <summary>
     /// Gets flight by ID
     /// </summary>
     /// <param name="id">Flight ID</param>
     /// <returns>Flight or null if not found</returns>
-    public Task<FlightDTO?> GetFlight(int id);
+    public Task<FlightDto?> GetFlight(int id);
 
     /// <summary>
     /// Updates an existing flight
@@ -38,7 +38,7 @@ public interface IFlightService
     /// <param name="id">Flight ID</param>
     /// <param name="dto">Updated flight data</param>
     /// <returns>Updated flight or null if not found</returns>
-    public Task<FlightDTO?> UpdateFlight(int id, FlightCreateDTO dto);
+    public Task<FlightDto?> UpdateFlight(int id, FlightCreateDto dto);
 
     /// <summary>
     /// Deletes a flight by ID

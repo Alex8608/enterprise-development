@@ -16,7 +16,7 @@ public class TicketService(
     /// <summary>
     /// Converts create DTO to entity
     /// </summary>
-    private static Ticket MapDto(TicketCreateDTO dto, Flight flight, Passenger passenger) =>
+    private static Ticket MapDto(TicketCreateDto dto, Flight flight, Passenger passenger) =>
         new()
         {
             Id = 0,
@@ -30,9 +30,9 @@ public class TicketService(
     /// <summary>
     /// Converts entity to read DTO
     /// </summary>
-    private static TicketDTO MapReadDto(Ticket entity)
+    private static TicketDto MapReadDto(Ticket entity)
     {
-        var flightDto = new FlightDTO(
+        var flightDto = new FlightDto(
             entity.Flight!.Id,
             entity.Flight.Code,
             entity.Flight.DepartureCity,
@@ -40,24 +40,24 @@ public class TicketService(
             entity.Flight.DepartureDate,
             entity.Flight.ArrivalDate,
             entity.Flight.Duration,
-            new AircraftModelDTO(
+            new AircraftModelDto(
                 entity.Flight.AircraftModel!.Id,
                 entity.Flight.AircraftModel.Name,
                 entity.Flight.AircraftModel.Range,
                 entity.Flight.AircraftModel.PassengerCapacity,
                 entity.Flight.AircraftModel.CargoCapacity,
-                new AircraftFamilyDTO(
+                new AircraftFamilyDto(
                     entity.Flight.AircraftModel.AircraftFamily!.Id,
                     entity.Flight.AircraftModel.AircraftFamily.Name,
                     entity.Flight.AircraftModel.AircraftFamily.Manufacturer)));
 
-        var passengerDto = new PassengerDTO(
+        var passengerDto = new PassengerDto(
             entity.Passenger!.Id,
             entity.Passenger.PassportNumber,
             entity.Passenger.FullName,
             entity.Passenger.DateOfBirth);
 
-        return new TicketDTO(
+        return new TicketDto(
             entity.Id,
             flightDto,
             passengerDto,
@@ -69,7 +69,7 @@ public class TicketService(
     /// <summary>
     /// Create a new ticket record
     /// </summary>
-    public async Task<int> CreateTicket(TicketCreateDTO dto)
+    public async Task<int> CreateTicket(TicketCreateDto dto)
     {
         var flight = await flightRepository.Read(dto.FlightId) 
             ?? throw new ArgumentException("Invalid Flight ID");
@@ -87,13 +87,13 @@ public class TicketService(
     /// <summary>
     /// Get all tickets
     /// </summary>
-    public async Task<List<TicketDTO>> GetTickets() =>
+    public async Task<List<TicketDto>> GetTickets() =>
          [.. (await ticketRepository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get tickets by flight ID
     /// </summary>
-    public async Task<List<TicketDTO>> GetTicketsByFlightId(int flightId) =>
+    public async Task<List<TicketDto>> GetTicketsByFlightId(int flightId) =>
         [.. (await ticketRepository.Read())
             .Where(t => t.FlightId == flightId)
             .Select(MapReadDto)];
@@ -101,7 +101,7 @@ public class TicketService(
     /// <summary>
     /// Get tickets by passenger ID
     /// </summary>
-    public async Task<List<TicketDTO>> GetTicketsByPassengerId(int passengerId) =>
+    public async Task<List<TicketDto>> GetTicketsByPassengerId(int passengerId) =>
        [.. (await ticketRepository.Read())
             .Where(t => t.PassengerId == passengerId)
             .Select(MapReadDto)];
@@ -109,7 +109,7 @@ public class TicketService(
     /// <summary>
     /// Get ticket by ID
     /// </summary>
-    public async Task<TicketDTO?> GetTicket(int id)
+    public async Task<TicketDto?> GetTicket(int id)
     {
         var entity = await ticketRepository.Read(id);
         return entity == null ? null : MapReadDto(entity);
@@ -118,7 +118,7 @@ public class TicketService(
     /// <summary>
     /// Update ticket by ID
     /// </summary>
-    public async Task<TicketDTO?> UpdateTicket(int id, TicketCreateDTO dto)
+    public async Task<TicketDto?> UpdateTicket(int id, TicketCreateDto dto)
     {
         var flight = await flightRepository.Read(dto.FlightId) 
             ?? throw new ArgumentException("Invalid Flight ID");

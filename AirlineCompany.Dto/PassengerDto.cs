@@ -3,7 +3,7 @@
 /// <summary>
 /// DTO for reading a passenger
 /// </summary>
-public record PassengerDTO
+public record PassengerDto
 {
     /// <summary>
     /// Unique ID for the primary key in the database
@@ -28,7 +28,7 @@ public record PassengerDTO
     /// <summary>
     /// DTO for read constructor
     /// </summary>
-    public PassengerDTO(int id, string passportNumber, string fullName, DateTime dateOfBirth)
+    public PassengerDto(int id, string passportNumber, string fullName, DateTime dateOfBirth)
     {
         Id = id;
         PassportNumber = passportNumber;

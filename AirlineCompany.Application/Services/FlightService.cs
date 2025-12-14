@@ -15,7 +15,7 @@ public class FlightService(
     /// <summary>
     /// Converts create DTO to entity
     /// </summary>
-    private static Flight MapDto(FlightCreateDTO dto, AircraftModel model) =>
+    private static Flight MapDto(FlightCreateDto dto, AircraftModel model) =>
         new()
         {
             Id = 0,
@@ -31,20 +31,20 @@ public class FlightService(
     /// <summary>
     /// Converts entity to read DTO
     /// </summary>
-    private FlightDTO MapReadDto(Flight entity)
+    private FlightDto MapReadDto(Flight entity)
     {
-        var modelDto = new AircraftModelDTO(
+        var modelDto = new AircraftModelDto(
             entity.AircraftModel!.Id,
             entity.AircraftModel.Name,
             entity.AircraftModel.Range,
             entity.AircraftModel.PassengerCapacity,
             entity.AircraftModel.CargoCapacity,
-            new AircraftFamilyDTO(
+            new AircraftFamilyDto(
                 entity.AircraftModel.AircraftFamily!.Id,
                 entity.AircraftModel.AircraftFamily.Name,
                 entity.AircraftModel.AircraftFamily.Manufacturer));
 
-        return new FlightDTO(
+        return new FlightDto(
             entity.Id,
             entity.Code,
             entity.DepartureCity,
@@ -58,7 +58,7 @@ public class FlightService(
     /// <summary>
     /// Create a new flight record
     /// </summary>
-    public async Task<int> CreateFlight(FlightCreateDTO dto)
+    public async Task<int> CreateFlight(FlightCreateDto dto)
     {
         var model = await modelRepository.Read(dto.AircraftModelId)
             ?? throw new ArgumentException("Invalid AircraftModel ID");
@@ -69,13 +69,13 @@ public class FlightService(
     /// <summary>
     /// Get all flights
     /// </summary>
-    public async Task<List<FlightDTO>> GetFlights() =>
+    public async Task<List<FlightDto>> GetFlights() =>
         [.. (await flightRepository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get flights by aircraft model ID
     /// </summary>
-    public async Task<List<FlightDTO>> GetFlightsByModelId(int modelId) =>
+    public async Task<List<FlightDto>> GetFlightsByModelId(int modelId) =>
        [.. (await flightRepository.Read())
             .Where(f => f.AircraftModelId == modelId)
             .Select(MapReadDto)];
@@ -83,7 +83,7 @@ public class FlightService(
     /// <summary>
     /// Get flight by ID
     /// </summary>
-    public async Task<FlightDTO?> GetFlight(int id)
+    public async Task<FlightDto?> GetFlight(int id)
     {
         var entity = await flightRepository.Read(id);
         return entity == null ? null : MapReadDto(entity);
@@ -92,7 +92,7 @@ public class FlightService(
     /// <summary>
     /// Update flight by ID
     /// </summary>
-    public async Task<FlightDTO?> UpdateFlight(int id, FlightCreateDTO dto)
+    public async Task<FlightDto?> UpdateFlight(int id, FlightCreateDto dto)
     {
         var model = await modelRepository.Read(dto.AircraftModelId)
             ?? throw new ArgumentException("Invalid AircraftModel ID");

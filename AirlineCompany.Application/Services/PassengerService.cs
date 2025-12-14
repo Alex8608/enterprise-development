@@ -13,7 +13,7 @@ public class PassengerService(IRepository<Passenger> repository) : IPassengerSer
     /// <summary>
     /// Converts create DTO to entity
     /// </summary>
-    private static Passenger MapDto(PassengerCreateDTO dto) =>
+    private static Passenger MapDto(PassengerCreateDto dto) =>
         new()
         {
             Id = 0,
@@ -25,13 +25,13 @@ public class PassengerService(IRepository<Passenger> repository) : IPassengerSer
     /// <summary>
     /// Converts entity to read DTO
     /// </summary>
-    private static PassengerDTO MapReadDto(Passenger entity) =>
+    private static PassengerDto MapReadDto(Passenger entity) =>
         new(entity.Id, entity.PassportNumber, entity.FullName, entity.DateOfBirth);
 
     /// <summary>
     /// Create a new passenger record
     /// </summary>
-    public async Task<int> CreatePassenger(PassengerCreateDTO dto)
+    public async Task<int> CreatePassenger(PassengerCreateDto dto)
     {
         var existing = (await repository.Read())
             .FirstOrDefault(p => p.PassportNumber == dto.PassportNumber);
@@ -45,13 +45,13 @@ public class PassengerService(IRepository<Passenger> repository) : IPassengerSer
     /// <summary>
     /// Get all passengers
     /// </summary>
-    public async Task<List<PassengerDTO>> GetPassengers() =>
+    public async Task<List<PassengerDto>> GetPassengers() =>
         [.. (await repository.Read()).Select(MapReadDto)];
 
     /// <summary>
     /// Get passenger by ID
     /// </summary>
-    public async Task<PassengerDTO?> GetPassenger(int id)
+    public async Task<PassengerDto?> GetPassenger(int id)
     {
         var entity = await repository.Read(id);
         return entity == null ? null : MapReadDto(entity);
@@ -60,7 +60,7 @@ public class PassengerService(IRepository<Passenger> repository) : IPassengerSer
     /// <summary>
     /// Update passenger by ID
     /// </summary>
-    public async Task<PassengerDTO?> UpdatePassenger(int id, PassengerCreateDTO dto)
+    public async Task<PassengerDto?> UpdatePassenger(int id, PassengerCreateDto dto)
     {
         var existing = (await repository.Read())
             .FirstOrDefault(p => p.PassportNumber == dto.PassportNumber && p.Id != id);

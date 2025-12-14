@@ -3,7 +3,7 @@
 /// <summary>
 /// DTO for reading a ticket
 /// </summary>
-public record TicketDTO
+public record TicketDto
 {
     /// <summary>
     /// Unique ID for the primary key in the database
@@ -13,12 +13,12 @@ public record TicketDTO
     /// <summary>
     /// Flight information
     /// </summary>
-    public FlightDTO Flight { get; init; }
+    public FlightDto Flight { get; init; }
 
     /// <summary>
     /// Passenger information
     /// </summary>
-    public PassengerDTO Passenger { get; init; }
+    public PassengerDto Passenger { get; init; }
 
     /// <summary>
     /// Seat number
@@ -38,10 +38,10 @@ public record TicketDTO
     /// <summary>
     /// DTO for read constructor
     /// </summary>
-    public TicketDTO(
+    public TicketDto(
         int id,
-        FlightDTO flight,
-        PassengerDTO passenger,
+        FlightDto flight,
+        PassengerDto passenger,
         string seatNumber,
         bool hasHandLuggage,
         double baggageWeight)

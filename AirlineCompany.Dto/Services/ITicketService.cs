@@ -10,34 +10,34 @@ public interface ITicketService
     /// </summary>
     /// <param name="dto">Data for creating ticket</param>
     /// <returns>ID of the created ticket</returns>
-    public Task<int> CreateTicket(TicketCreateDTO dto);
+    public Task<int> CreateTicket(TicketCreateDto dto);
 
     /// <summary>
     /// Gets all tickets
     /// </summary>
     /// <returns>List of all tickets</returns>
-    public Task<List<TicketDTO>> GetTickets();
+    public Task<List<TicketDto>> GetTickets();
 
     /// <summary>
     /// Gets tickets by flight ID
     /// </summary>
     /// <param name="flightId">Flight ID</param>
     /// <returns>List of tickets for the specified flight</returns>
-    public Task<List<TicketDTO>> GetTicketsByFlightId(int flightId);
+    public Task<List<TicketDto>> GetTicketsByFlightId(int flightId);
 
     /// <summary>
     /// Gets tickets by passenger ID
     /// </summary>
     /// <param name="passengerId">Passenger ID</param>
     /// <returns>List of tickets for the specified passenger</returns>
-    public Task<List<TicketDTO>> GetTicketsByPassengerId(int passengerId);
+    public Task<List<TicketDto>> GetTicketsByPassengerId(int passengerId);
 
     /// <summary>
     /// Gets ticket by ID
     /// </summary>
     /// <param name="id">Ticket ID</param>
     /// <returns>Ticket or null if not found</returns>
-    public Task<TicketDTO?> GetTicket(int id);
+    public Task<TicketDto?> GetTicket(int id);
 
     /// <summary>
     /// Updates an existing ticket
@@ -45,7 +45,7 @@ public interface ITicketService
     /// <param name="id">Ticket ID</param>
     /// <param name="dto">Updated ticket data</param>
     /// <returns>Updated ticket or null if not found</returns>
-    public Task<TicketDTO?> UpdateTicket(int id, TicketCreateDTO dto);
+    public Task<TicketDto?> UpdateTicket(int id, TicketCreateDto dto);
 
     /// <summary>
     /// Deletes a ticket by ID

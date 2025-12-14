@@ -3,7 +3,7 @@
 /// <summary>
 /// DTO for reading a flight
 /// </summary>
-public record FlightDTO
+public record FlightDto
 {
     /// <summary>
     /// Unique ID for the primary key in the database
@@ -43,12 +43,12 @@ public record FlightDTO
     /// <summary>
     /// Associated aircraft model
     /// </summary>
-    public AircraftModelDTO AircraftModel { get; init; }
+    public AircraftModelDto AircraftModel { get; init; }
 
     /// <summary>
     /// DTO for read constructor
     /// </summary>
-    public FlightDTO(
+    public FlightDto(
         int id,
         string code,
         string departureCity,
@@ -56,7 +56,7 @@ public record FlightDTO
         DateTime departureDate,
         DateTime arrivalDate,
         TimeSpan duration,
-        AircraftModelDTO aircraftModel)
+        AircraftModelDto aircraftModel)
     {
         Id = id;
         Code = code;

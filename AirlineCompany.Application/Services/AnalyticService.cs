@@ -16,7 +16,7 @@ public class AnalyticService(
     /// <summary>
     /// Display the top 5 flights by the number of passengers carried.
     /// </summary>
-    public async Task<List<FlightPassengerCountDTO>> GetTopFiveFlightsByPassengerCount()
+    public async Task<List<FlightPassengerCountDto>> GetTopFiveFlightsByPassengerCount()
     {
         var flights = await flightRepository.Read();
         var tickets = await ticketRepository.Read();
@@ -25,7 +25,7 @@ public class AnalyticService(
             from f in flights
             let passengerCount = tickets.Count(t => t.FlightId == f.Id)
             orderby passengerCount descending
-            select new FlightPassengerCountDTO(f.Code, passengerCount)
+            select new FlightPassengerCountDto(f.Code, passengerCount)
         )
         .Take(5)
         .ToList();
@@ -36,7 +36,7 @@ public class AnalyticService(
     /// <summary>
     /// Display a list of flights with the minimum travel time.
     /// </summary>
-    public async Task<List<FlightDurationDTO>> GetFlightsWithMinDuration()
+    public async Task<List<FlightDurationDto>> GetFlightsWithMinDuration()
     {
         var flights = await flightRepository.Read();
 
@@ -47,7 +47,7 @@ public class AnalyticService(
 
         var result = flights
             .Where(f => f.Duration == minDuration)
-            .Select(f => new FlightDurationDTO(f.Code, f.Duration))
+            .Select(f => new FlightDurationDto(f.Code, f.Duration))
             .ToList();
 
         return result;
@@ -56,7 +56,7 @@ public class AnalyticService(
     /// <summary>
     /// Display information about all passengers flying on the selected flight whose baggage weight is zero, sorted by full name.
     /// </summary>
-    public async Task<List<PassengerDTO>> GetPassengersWithZeroBaggageOnFlight(string flightCode)
+    public async Task<List<PassengerDto>> GetPassengersWithZeroBaggageOnFlight(string flightCode)
     {
         var flights = await flightRepository.Read();
         var tickets = await ticketRepository.Read();
@@ -75,7 +75,7 @@ public class AnalyticService(
         var result = passengers
             .Where(p => passengerIdsWithZeroBaggage.Contains(p.Id))
             .OrderBy(p => p.FullName)
-            .Select(p => new PassengerDTO(p.Id, p.PassportNumber, p.FullName, p.DateOfBirth))
+            .Select(p => new PassengerDto(p.Id, p.PassportNumber, p.FullName, p.DateOfBirth))
             .ToList();
 
         return result;
@@ -85,7 +85,7 @@ public class AnalyticService(
     /// <summary>
     /// Display summary information about all flights of aircraft of the selected model during a specified period of time.
     /// </summary>
-    public async Task<List<FlightDTO>> GetFlightsOfModelInPeriod(int modelId, DateTime? fromDate, DateTime? toDate)
+    public async Task<List<FlightDto>> GetFlightsOfModelInPeriod(int modelId, DateTime? fromDate, DateTime? toDate)
     {
         var flights = await flightRepository.Read();
 
@@ -102,7 +102,7 @@ public class AnalyticService(
     /// <summary>
     /// Display information about all flights departing from a specified departure point to a specified arrival point.
     /// </summary>
-    public async Task<List<FlightByRouteDTO>> GetFlightsByRoute(string departureCity, string arrivalCity)
+    public async Task<List<FlightByRouteDto>> GetFlightsByRoute(string departureCity, string arrivalCity)
     {
         var flights = await flightRepository.Read();
 
@@ -110,7 +110,7 @@ public class AnalyticService(
             .Where(f =>
                 string.Equals(f.DepartureCity, departureCity, StringComparison.OrdinalIgnoreCase) &&
                 string.Equals(f.ArrivalCity, arrivalCity, StringComparison.OrdinalIgnoreCase))
-            .Select(f => new FlightByRouteDTO(
+            .Select(f => new FlightByRouteDto(
                 f.Code,
                 f.DepartureCity,
                 f.ArrivalCity,
@@ -124,26 +124,26 @@ public class AnalyticService(
     /// <summary>
     /// Helper method to convert Flight entity to FlightDTO
     /// </summary>
-    private FlightDTO MapToFlightDTO(Flight entity)
+    private static FlightDto MapToFlightDTO(Flight entity)
     {
         var model = entity.AircraftModel;
         var family = model?.AircraftFamily;
 
         var familyDto = family != null
-            ? new AircraftFamilyDTO(family.Id, family.Name, family.Manufacturer)
-            : new AircraftFamilyDTO(0, string.Empty, string.Empty);
+            ? new AircraftFamilyDto(family.Id, family.Name, family.Manufacturer)
+            : new AircraftFamilyDto(0, string.Empty, string.Empty);
 
         var modelDto = model != null
-            ? new AircraftModelDTO(
+            ? new AircraftModelDto(
                 model.Id,
                 model.Name,
                 model.Range,
                 model.PassengerCapacity,
                 model.CargoCapacity,
                 familyDto)
-            : new AircraftModelDTO(0, string.Empty, 0, 0, 0, familyDto);
+            : new AircraftModelDto(0, string.Empty, 0, 0, 0, familyDto);
 
-        return new FlightDTO(
+        return new FlightDto(
             entity.Id,
             entity.Code,
             entity.DepartureCity,

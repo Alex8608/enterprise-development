@@ -5,7 +5,7 @@ namespace AirlineCompany.Dto;
 /// <summary>
 /// DTO for creating a passenger
 /// </summary>
-public record PassengerCreateDTO
+public record PassengerCreateDto
 {
     /// <summary>
     /// Passport number
@@ -32,7 +32,7 @@ public record PassengerCreateDTO
     /// <summary>
     /// Create DTO constructor
     /// </summary>
-    public PassengerCreateDTO(string passportNumber, string fullName, DateTime dateOfBirth)
+    public PassengerCreateDto(string passportNumber, string fullName, DateTime dateOfBirth)
     {
         PassportNumber = passportNumber;
         FullName = fullName;

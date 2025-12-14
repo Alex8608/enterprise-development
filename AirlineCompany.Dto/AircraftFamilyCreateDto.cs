@@ -5,7 +5,7 @@ namespace AirlineCompany.Dto;
 /// <summary>
 /// DTO for creating an aircraft family
 /// </summary>
-public record AircraftFamilyCreateDTO
+public record AircraftFamilyCreateDto
 {
     /// <summary>
     /// Family name
@@ -24,7 +24,7 @@ public record AircraftFamilyCreateDTO
     /// <summary>
     /// Create DTO constructor
     /// </summary>
-    public AircraftFamilyCreateDTO(string name, string manufacturer)
+    public AircraftFamilyCreateDto(string name, string manufacturer)
     {
         Name = name;
         Manufacturer = manufacturer;

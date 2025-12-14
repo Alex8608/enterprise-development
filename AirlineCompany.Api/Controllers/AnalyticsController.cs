@@ -17,9 +17,9 @@ public class AnalyticsController(
     /// Top 5 flights by number of passengers
     /// </summary>
     [HttpGet("top-five-flights")]
-    [ProducesResponseType(typeof(List<FlightPassengerCountDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<FlightPassengerCountDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<FlightPassengerCountDTO>>> GetTopFiveFlights()
+    public async Task<ActionResult<List<FlightPassengerCountDto>>> GetTopFiveFlights()
     {
         try
         {
@@ -37,9 +37,9 @@ public class AnalyticsController(
     /// Flights with minimum duration
     /// </summary>
     [HttpGet("min-duration-flights")]
-    [ProducesResponseType(typeof(List<FlightDurationDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<FlightDurationDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<FlightDurationDTO>>> GetMinDurationFlights()
+    public async Task<ActionResult<List<FlightDurationDto>>> GetMinDurationFlights()
     {
         try
         {
@@ -57,10 +57,10 @@ public class AnalyticsController(
     /// Passengers on the flight with zero baggage, ordered by full name
     /// </summary>
     [HttpGet("flight/{flightCode}/zero-baggage-passengers")]
-    [ProducesResponseType(typeof(List<PassengerDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<PassengerDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<PassengerDTO>>> GetPassengersWithZeroBaggage(string flightCode)
+    public async Task<ActionResult<List<PassengerDto>>> GetPassengersWithZeroBaggage(string flightCode)
     {
         try
         {
@@ -91,11 +91,11 @@ public class AnalyticsController(
     /// Summary of all flights of the model during period
     /// </summary>
     [HttpGet("model/{modelId:int}/flights")]
-    [ProducesResponseType(typeof(List<FlightDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<FlightDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<FlightDTO>>> GetFlightsOfModelInPeriod(
+    public async Task<ActionResult<List<FlightDto>>> GetFlightsOfModelInPeriod(
         int modelId,
         [FromQuery] DateTime? fromDate,
         [FromQuery] DateTime? toDate)
@@ -136,11 +136,11 @@ public class AnalyticsController(
     /// Flights by departure and arrival cities
     /// </summary>
     [HttpGet("flights-by-route")]
-    [ProducesResponseType(typeof(List<FlightByRouteDTO>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<FlightByRouteDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<FlightByRouteDTO>>> GetFlightsByRoute(
+    public async Task<ActionResult<List<FlightByRouteDto>>> GetFlightsByRoute(
         [FromQuery] string departureCity,
         [FromQuery] string arrivalCity)
     {

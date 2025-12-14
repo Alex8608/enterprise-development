@@ -3,7 +3,7 @@
 /// <summary>
 /// DTO for reading an aircraft family
 /// </summary>
-public record AircraftFamilyDTO
+public record AircraftFamilyDto
 {
     /// <summary>
     /// Unique ID for the primary key in the database
@@ -23,7 +23,7 @@ public record AircraftFamilyDTO
     /// <summary>
     /// DTO for read constructor
     /// </summary>
-    public AircraftFamilyDTO(int id, string name, string manufacturer)
+    public AircraftFamilyDto(int id, string name, string manufacturer)
     {
         Id = id;
         Name = name;
