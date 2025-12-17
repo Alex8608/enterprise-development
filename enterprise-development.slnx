@@ -4,6 +4,7 @@
   <Project Path="AirlineCompany.Application/AirlineCompany.Application.csproj" Id="3d0411cb-dbcb-44d3-8556-1e7bd20baa92" />
   <Project Path="AirlineCompany.Core/AirlineCompany.Core.csproj" />
   <Project Path="AirlineCompany.Dto/AirlineCompany.Dto.csproj" Id="030f7b9b-925a-4e17-8d9e-a0fb6540fecc" />
+  <Project Path="AirlineCompany.Generator/AirlineCompany.Generator.csproj" Id="2840a0a8-4a7b-4ebc-bcb5-01ae4b51d777" />
   <Project Path="AirlineCompany.Infrastructure/AirlineCompany.Infrastructure.csproj" Id="2796553d-23ad-401e-95ee-3063515c792f" />
   <Project Path="AirlineCompany.ServiceDefaults/AirlineCompany.ServiceDefaults.csproj" />
   <Project Path="AirlineCompany.Tests/AirlineCompany.Tests.csproj" />

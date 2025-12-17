@@ -1,3 +1,4 @@
+using AirlineCompany.Api.Kafka;
 using AirlineCompany.Application.Services;
 using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
@@ -5,6 +6,7 @@ using AirlineCompany.Dto.Services;
 using AirlineCompany.Infrastructure.Data;
 using AirlineCompany.Infrastructure.Repositories;
 using AirlineCompany.ServiceDefaults;
+using Confluent.Kafka;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +34,24 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+var kafkaConnection = builder.Configuration.GetConnectionString("KafkaConnection")
+    ?? "localhost:9092";
+
+builder.Services.AddSingleton<IConsumer<Ignore, string>>(sp =>
+{
+    var config = new ConsumerConfig
+    {
+        BootstrapServers = kafkaConnection,
+        GroupId = builder.Configuration["Kafka:GroupId"] ?? "airline-company-api-group",
+        AutoOffsetReset = AutoOffsetReset.Earliest,
+        EnableAutoCommit = false,
+        EnableAutoOffsetStore = false
+    };
+    return new ConsumerBuilder<Ignore, string>(config).Build();
+});
+
+builder.Services.AddHostedService<KafkaConsumer>();
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
@@ -72,8 +92,38 @@ app.UseStatusCodePages();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureDeleted();
-    db.Database.Migrate();
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+    try
+    {
+        await db.Database.EnsureDeletedAsync();
+        logger.LogInformation("Database deleted");
+
+        await db.Database.MigrateAsync();
+        logger.LogInformation("Database migrated");
+
+        logger.LogInformation("Starting data seeding...");
+        await DataSeeder.SeedAsync(db);
+        logger.LogInformation("Data seeding completed");
+
+        var flightCount = await db.Flights.CountAsync();
+        var passengerCount = await db.Passengers.CountAsync();
+        var ticketCount = await db.Tickets.CountAsync();
+
+        logger.LogInformation("Seed data: {Flights} flights, {Passengers} passengers, {Tickets} tickets",
+            flightCount, passengerCount, ticketCount);
+
+        var flightIds = await db.Flights.Select(f => f.Id).ToListAsync();
+        var passengerIds = await db.Passengers.Select(p => p.Id).ToListAsync();
+
+        logger.LogInformation("Available Flight IDs: {FlightIds}", string.Join(", ", flightIds));
+        logger.LogInformation("Available Passenger IDs: {PassengerIds}", string.Join(", ", passengerIds));
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while initializing the database");
+        throw;
+    }
 }
 
 if (app.Environment.IsDevelopment())

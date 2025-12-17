@@ -1,4 +1,5 @@
 ﻿using AirlineCompany.Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AirlineCompany.Infrastructure.Data;
 
@@ -7,6 +8,52 @@ namespace AirlineCompany.Infrastructure.Data;
 /// </summary>
 public static class DataSeeder
 {
+    /// <summary>
+    /// Seeds the database with initial data
+    /// </summary>
+    /// <param name="context">Database context</param>
+    public static async Task SeedAsync(AppDbContext context)
+    {
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT AircraftFamilies ON");
+        if (!await context.AircraftFamilies.AnyAsync())
+        {
+            context.AircraftFamilies.AddRange(AircraftFamilies);
+            await context.SaveChangesAsync();
+        }
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT AircraftFamilies OFF");
+
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT AircraftModels ON");
+        if (!await context.AircraftModels.AnyAsync())
+        {
+            context.AircraftModels.AddRange(AircraftModels);
+            await context.SaveChangesAsync();
+        }
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT AircraftModels OFF");
+
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Flights ON");
+        if (!await context.Flights.AnyAsync())
+        {
+            context.Flights.AddRange(Flights);
+            await context.SaveChangesAsync();
+        }
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Flights OFF");
+
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Passengers ON");
+        if (!await context.Passengers.AnyAsync())
+        {
+            context.Passengers.AddRange(Passengers);
+            await context.SaveChangesAsync();
+        }
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Passengers OFF");
+
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Tickets ON");
+        if (!await context.Tickets.AnyAsync())
+        {
+            context.Tickets.AddRange(Tickets);
+            await context.SaveChangesAsync();
+        }
+        await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Tickets OFF");
+    }
     /// <summary>
     /// Gets seed data for aircraft families
     /// </summary>

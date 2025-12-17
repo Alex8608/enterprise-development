@@ -12,12 +12,14 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.0" />
+	<PackageReference Include="Aspire.Hosting.Kafka" Version="9.5.2" />
 	<PackageReference Include="Aspire.Hosting.SqlServer" Version="9.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AirlineCompany.Api\AirlineCompany.Api.csproj" />
 	<ProjectReference Include="..\AirlineCompany.ServiceDefaults\AirlineCompany.ServiceDefaults.csproj" />
+	<ProjectReference Include="..\AirlineCompany.Generator\AirlineCompany.Generator.csproj" />
   </ItemGroup>
 
 </Project>

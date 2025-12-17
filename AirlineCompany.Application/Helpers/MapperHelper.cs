@@ -32,7 +32,7 @@ public static class MapperHelper
             ? throw new ArgumentNullException(nameof(dto))
             : new AircraftFamily
         {
-            Id = 0,
+            Id = default,
             Name = dto.Name,
             Manufacturer = dto.Manufacturer
         };
@@ -67,7 +67,7 @@ public static class MapperHelper
             ? throw new ArgumentNullException(nameof(dto))
             : new AircraftModel
         {
-            Id = 0,
+            Id = default,
             Name = dto.Name,
             Range = dto.Range,
             PassengerCapacity = dto.PassengerCapacity,
@@ -107,7 +107,7 @@ public static class MapperHelper
             ? throw new ArgumentNullException(nameof(dto))
             : new Flight
         {
-            Id = 0,
+            Id = default,
             Code = dto.Code,
             DepartureCity = dto.DepartureCity,
             ArrivalCity = dto.ArrivalCity,
@@ -145,7 +145,7 @@ public static class MapperHelper
             ? throw new ArgumentNullException(nameof(dto))
             : new Passenger
         {
-            Id = 0,
+            Id = default,
             PassportNumber = dto.PassportNumber,
             FullName = dto.FullName,
             DateOfBirth = dto.DateOfBirth
@@ -181,13 +181,13 @@ public static class MapperHelper
             ? throw new ArgumentNullException(nameof(dto))
             : new Ticket
         {
-            Id = 0,
+            Id = default,
             SeatNumber = dto.SeatNumber,
             HasHandLuggage = dto.HasHandLuggage,
             BaggageWeight = dto.BaggageWeight,
             FlightId = dto.FlightId,
-            PassengerId = dto.PassengerId
-        };
+            PassengerId = dto.PassengerId,
+            };
     }
 
     #endregion

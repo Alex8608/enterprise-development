@@ -3,6 +3,7 @@ using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.Dto;
 using AirlineCompany.Dto.Services;
+using System;
 
 namespace AirlineCompany.Application.Services;
 
@@ -19,10 +20,14 @@ public class TicketService(
     /// </summary>
     public async Task<int> CreateTicket(TicketCreateDto dto)
     {
-        var flight = await flightRepository.Read(dto.FlightId) 
-            ?? throw new ArgumentException("Invalid Flight ID");
-        var passenger = await passengerRepository.Read(dto.PassengerId)
-            ?? throw new ArgumentException("Invalid Passenger ID");
+        var flight = await flightRepository.Read(dto.FlightId);
+        var passenger = await passengerRepository.Read(dto.PassengerId);
+
+        if (flight == null)
+            throw new ArgumentException($"Invalid Flight ID: {dto.FlightId}");
+        if (passenger == null)
+            throw new ArgumentException($"Invalid Passenger ID: {dto.PassengerId}");
+
         var existingTicket = (await ticketRepository.Read())
             .FirstOrDefault(t => t.FlightId == dto.FlightId && t.SeatNumber == dto.SeatNumber);
 
@@ -30,8 +35,7 @@ public class TicketService(
             throw new ArgumentException($"Seat {dto.SeatNumber} is already taken on this flight");
 
         var entity = MapperHelper.ToEntity(dto);
-        entity.Flight = flight;
-        entity.Passenger = passenger;
+
         return await ticketRepository.Create(entity);
     }
 
