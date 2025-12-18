@@ -3,7 +3,6 @@ using AirlineCompany.Core.Entities;
 using AirlineCompany.Core.Repositories;
 using AirlineCompany.Dto;
 using AirlineCompany.Dto.Services;
-using System;
 
 namespace AirlineCompany.Application.Services;
 
